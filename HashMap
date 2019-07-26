@@ -1,1 +1,26 @@
+Why HashMap should not be used in multi threaded environment? 
+Can it cause infinite loop as well?
+When get method go to infinite loop in HashMap?
+Ans.
+Well, nothing is wrong — it depends on how you use it. For example, if you initialize the HashMap with just one thread and all threads are only reading from it, then it's perfectly fine.
 
+One example of this is a Map that contains configuration properties. The real problem starts when at least one of those threads is updating the HashMap, i.e. adding, changing, or removing any key-value pair.
+
+Since a put() operation can cause re-sizing, which can further lead to infinite loop, that's why either you should use a Hashtable or ConcurrentHashMap 
+
+What is Rehashing?
+
+ 
+Default capacity of HashMap is 16 and Load factor is 0.75, which means HashMap will double its capacity when 13th Key-Value pair enters in map (16 * 0.75 = 12).
+
+Till 12th Key-value pair, Hashmap will keep putting items in map and as soon as you try to put 13th key-value pair, rehashing process starts. 
+
+Load factor: Load factor is a measure "Till what load, hashmap can allow elements to put in it before its size is increased.
+
+
+Rehasing reverses ordering of the nodes 
+In Rehashing process, 
+Hashmap creates a New Array(Buckets) of double size first.
+Hashmap transfers key-value pairs from Old buckets to New buckets.  
+Key-value pairs will be reversed in New buckets because Hashmap will add key-value pairs at the start in the New bucket and not at the end. 
+Hashmap adds new key-value pairs at start to avoid traversing linked list every time and keep constant performance.
