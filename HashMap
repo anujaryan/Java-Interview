@@ -24,3 +24,7 @@ Hashmap creates a New Array(Buckets) of double size first.
 Hashmap transfers key-value pairs from Old buckets to New buckets.  
 Key-value pairs will be reversed in New buckets because Hashmap will add key-value pairs at the start in the New bucket and not at the end. 
 Hashmap adds new key-value pairs at start to avoid traversing linked list every time and keep constant performance.
+
+
+Question 14: Where does equals() and hashCode() method comes in the picture during the get() operation on HashMap?
+Ans.When you provide a key object, first it’s hashcode method is called to calculate bucket location. Since a bucket may contain more than one entry as a linked list, each of those Map.Entry object is evaluated by using equals() method to see if they contain the actual key object or not.
