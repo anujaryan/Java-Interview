@@ -1,0 +1,10 @@
+1.FunctionalInterface Comparator has 2 abstract methods?
+@FunctionalInterface
+public interface Comparator<T> {
+    int compare(T o1, T o2);
+    boolean equals(Object obj);
+}
+
+Ans. equals() is inherited from Object, and inherited public methods are not counted when you’re determining whether an interface is a functional interface. So even though equals() is abstract in Comparator, because it’s inherited, it doesn’t count.
+
+RULE: A functional interface is an interface that has one abstract method. Default methods don’t count; static methods don’t count; and methods inherited from Object don’t count.
