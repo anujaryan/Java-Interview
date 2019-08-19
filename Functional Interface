@@ -8,3 +8,21 @@ public interface Comparator<T> {
 Ans. equals() is inherited from Object, and inherited public methods are not counted when you’re determining whether an interface is a functional interface. So even though equals() is abstract in Comparator, because it’s inherited, it doesn’t count.
 
 RULE: A functional interface is an interface that has one abstract method. Default methods don’t count; static methods don’t count; and methods inherited from Object don’t count.
+
+2.Is it mandatory to mark functional interface with @FunctionalInterface annotation?
+
+It is not mandatory to mark functional interface with @FunctionalInterface annotation, it is more of a best practice to do that and also gives a surety that no other abstract method will be added accidentally to the functional interface. Because it will result in compiler error if any other abstract method is added to a functional interface which is annotated with @FunctionalInterface annotation.
+
+3.What is effective final in Java? What is variable capture?
+
+When a lambda expression uses an assigned local variable from its enclosing space there is an important restriction. A lambda expression may only use local variable whose value doesn't change. That restriction is referred as "variable capture".
+
+The local variables that a lambda expression may use are known as "effectively final". An effectively final variable is one whose value does not change after it is first assigned.
+
+4.What is method reference in Java 8?
+
+Lambda expressions can be used to call an existing method. Java 8 provides another feature called method reference that provides a clearer alternative to refer to the existing method by name.
+
+General form of Method reference - ClassName (or object)::methodName
+
+class name or instance is separated from the method name by a double colon. The :: is a new separator (known as double colon operator) that has been added in Java 8.
