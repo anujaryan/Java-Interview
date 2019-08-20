@@ -1,3 +1,11 @@
+Q1.What is JPA? Introduction to the Java Persistence API
+Ans.As a specification, the Java Persistence API is concerned with persistence.
+2. The JPA specification lets you define which objects should be persisted, and how those objects should be persisted in your Java applications.
+
+By itself, JPA is not a tool or framework; rather, it defines a set of concepts that can be implemented by any tool or framework. While JPA's object-relational mapping (ORM) model was originally based on Hibernate
+
+
+
 Why HashMap should not be used in multi threaded environment? 
 Can it cause infinite loop as well?
 When get method go to infinite loop in HashMap?
