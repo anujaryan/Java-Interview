@@ -1,3 +1,27 @@
+1.What is advantage of stream over loop?
+Ans.Streams are a more declarative style. Or a more expressive style.
+ex. return people
+     .filter( p -> p.age() < 19)
+     .collect(toList());
+     1.Streams have a strong affinity with functions. Java 8 introduces lambdas and functional interfaces, which opens a whole toybox of powerful techniques. Streams provide the most convenient and natural way to apply functions to sequences of objects.
+    2. Streams encourage less mutability. This is sort of related to the functional programming aspect -- the kind of programs you write using streams tend to be the kind of programs where you don't modify objects.
+
+3.Streams encourage looser coupling. Your stream-handling code doesn't need to know the source of the stream, or its eventual terminating method.
+Streams can succinctly express quite sophisticated behaviour. For example:
+
+ stream.filter(myfilter).findFirst();
+ 
+ Disadvantages?
+
+Performance: A for loop through an array is extremely lightweight both in terms of heap and CPU usage. If raw speed and memory thriftiness is a priority, using a stream is worse.
+
+Familiarity.The world is full of experienced procedural programmers, from many language backgrounds, for whom loops are familiar and streams are novel. In some environments, you want to write code that's familiar to that kind of person.
+
+Cognitive overhead. Because of its declarative nature, and increased abstraction from what's happening underneath, you may need to build a new mental model of how code relates to execution. Actually you only need to do this when things go wrong, or if you need to deeply analyse performance or subtle bugs. When it "just works", it just works.
+
+Debuggers are improving, but even now, when you're stepping through stream code in a debugger, it can be harder work than the equivalent loop, because a simple loop is very close to the variables and code locations that a traditional debugger works with.
+
+
 1.FunctionalInterface Comparator has 2 abstract methods?
 @FunctionalInterface
 public interface Comparator<T> {
