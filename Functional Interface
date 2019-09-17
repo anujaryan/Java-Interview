@@ -1,3 +1,39 @@
+1.What is consumer and suppiler in java 8?
+Ans.So in layman terms, a supplier is a method that returns some value (as in it's return value). Whereas, a consumer is a method that consumes some value (as in method argument), and does some operations on them.
+1.Supplier->
+public Integer getInteger() {
+    return new Random().nextInt();
+}
+
+@FunctionalInterface
+public interface Supplier<T> {
+
+    /**
+     * Gets a result.
+     *
+     * @return a result
+     */
+    T get();
+}
+
+Consumer->
+@FunctionalInterface
+public void sum(Integer a, Integer b) {
+    System.out.println(a + b);
+}
+public interface Consumer<T>{
+public void accept(T t);
+}
+
+
+Both are functional interface which added in java 8 both interface are belong  to  java.util.Funtion package. 
+
+Application of Conusmer Interface:
+1.Consumer<T> is an in-built functional interface introduced in Java 8 in the java.util.function package. Consumer can be used in all contexts where an object needs to be consumed,i.e. taken as input, and some operation is to be performed on the object without returning any result. Common example of such an operation is printing where an object is taken as input to the printing function and the value of the object is printed
+
+
+
+
 1.What is advantage of stream over loop?
 Ans.Streams are a more declarative style. Or a more expressive style.
 ex. return people
