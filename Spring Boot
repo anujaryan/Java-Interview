@@ -1,0 +1,6 @@
+What Is Spring Boot?
+Ans.All in all, Spring Boot is a project built on the top of the Spring framework. It provides a simpler and faster way to set up, configure, and run both simple and web-based applications.
+Notable Features
+Auto-configuration: It sets up your application based on the surrounding environment, as well as hints what the developers provide.
+Standalone: Literally, it's completely standalone. Hence, you don’t need to deploy your application to a web server or any special environment. Your only task is to click on the button or give out the run command, and it will start.
+Opinionated: This means that the framework chooses how to things for itself. This is the point where a lot of people says "wait a minute, I do not want to participate in it." Here I encourage you to wait for a second and hold your judgment for now, because, actually, it can be a good thing.
