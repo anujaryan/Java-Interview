@@ -1,0 +1,12 @@
+1.A logarithmic algorithm — O(logn)
+Runtime grows logarithmically in proportion to n.
+A linear algorithm — O(n)
+Runtime grows directly in proportion to n.
+A superlinear algorithm — O(nlogn)
+Runtime grows in proportion to n.
+A polynomial algorithm — O(nc)
+Runtime grows quicker than previous all based on n.
+A exponential algorithm — O(cn)
+Runtime grows even faster than polynomial algorithm based on n.
+A factorial algorithm — O(n!)
+Runtime grows the fastest and becomes quickly unusable for even
