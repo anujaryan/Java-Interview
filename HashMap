@@ -1,3 +1,10 @@
+
+Q26.if string is stored in string-pool, as it supports immutability then where are our custom immutable classes are stored in java.
+Ans.The heap is the run-time data area from which memory for all class instances and arrays is allocated
+1. a string contained in the pool still is stored in the heap memory, by definition, while the pool has a reference to it
+2.Like strings contained in the pool are still stored in the heap memory, objects of your class are still stored in the heap memory when being referenced by whatever data structure used for the pool is referencing them. It’s not even necessary for the object to be immutable, to have such a pool, but the implied sharing of instances would cause semantic problems when mutations are possible. So creating a pool usually only makes sense for immutable objects.
+3. lots of the wrapper classes have such sharing, the valueOf methods for Short, Integer and Long will return shared instances for values in the -128 … +127 range and implementations are allowed to share even more, whereas Byte and Boolean return shared instances for all possible values
+
 Q25-2.How many threads being created?
 Ans.	System.out.println("Active Thread " + Thread.activeCount() + " All StackTrace : " + Thread.getAllStackTraces());
  1.Signal Dispatcher
