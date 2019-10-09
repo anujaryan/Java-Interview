@@ -1,3 +1,8 @@
+
+Q29.Which Start method of thread class register a method to thread scheduler
+Q28.Can we use main method with final?
+Ans.final static void main(String args[]) yes, we do that it will work fine.
+
 Q27.Is to possible to write and load your own version of core Java classes?
 Ans.Error: Main method not found in class java.lang.String, please define the main method as:
    public static void main(String[] args)
