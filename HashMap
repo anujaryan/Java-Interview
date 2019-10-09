@@ -1,4 +1,13 @@
+Q27.Is to possible to write and load your own version of core Java classes?
+Ans.Error: Main method not found in class java.lang.String, please define the main method as:
+   public static void main(String[] args)
+1.javac has to compile the core classes.
+2.There are checks done at runtime to prevent you loading duplicate classes.
+3.You can't load any classes starting with java.. I believe, this was done to stop Microsoft doing naughty incompatible things.
+4.You can't load two classes with the same name with the same class loader instance.
 
+By default the class loader will check the parent loader before loading a class. This one is overridable (with the relevant security permissions)
+   
 Q26.if string is stored in string-pool, as it supports immutability then where are our custom immutable classes are stored in java.
 Ans.The heap is the run-time data area from which memory for all class instances and arrays is allocated
 1. a string contained in the pool still is stored in the heap memory, by definition, while the pool has a reference to it
