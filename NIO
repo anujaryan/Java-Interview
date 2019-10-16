@@ -1,1 +1,83 @@
 
+1.Java IO vs. NIO?
+Ans.
+    IO	                                          NIO
+It is based on the Blocking I/O operation	   It is based on the Non-blocking I/O operation
+It is Stream-oriented                    	   It is Buffer-oriented
+Channels are not available	                 Channels are available for Non-blocking I/O operation
+Selectors are not available	                 Selectors are available for Non-blocking I/O operation
+
+2.What is socket?
+Ans.A socket is one endpoint of a two-way communication link between two programs running on the network. A socket is bound to a port number so that the TCP layer can identify the application that data is destined to be sent to.
+
+a server runs on a specific computer and has a socket that is bound to a specific port number. The server just waits, listening to the socket for a client to make a connection request.
+
+On the client-side: The client knows the hostname of the machine on which the server is running and the port number on which the server is listening. To make a connection request, the client tries to rendezvous with the server on the server's machine and port. The client also needs to identify itself to the server so it binds to a local port number that it will use during this connection. This is usually assigned by the system.
+1.An endpoint is a combination of an IP address and a port number
+2.The java.net package in the Java platform provides a class, Socket, that implements one side of a two-way connection between your Java program and another program on the network. The Socket class sits on top of a platform-dependent implementation,
+
+3.What is Channel?
+Ans.
+1.A channel is an open connection between a data source and a Java program to perform I/O operations.
+2.The Channel interface is in the java.nio.channels package.
+3.Channel interface declares only two methods: close() and isOpen().
+A channel represents an open connection to an entity such as a hardware device, a file, a network socket, or a program component that is capable of performing one or more distinct I/O operations, for example reading or writing.
+
+A channel is either open or closed. A channel is open upon creation, and once closed it remains closed. Once a channel is closed, any attempt to invoke an I/O operation upon it will cause a ClosedChannelException to be thrown. Whether or not a channel is open may be tested by invoking its isOpen method.
+
+
+
+Blocking I/O
+
+Blocking IO wait for the data to be write or read before returning. Java IO's various streams are blocking. It means when the thread invoke a write() or read(), then the thread is blocked until there is some data available for read, or the data is fully written.
+
+
+
+
+Non blocking I/O
+
+Non blocking IO does not wait for the data to be read or write before returning. Java NIO non- blocking mode allows the thread to request writing data to a channel, but not wait for it to be fully written. The thread is allowed to go on and do something else in a mean time.
+
+
+
+Stream Oriented vs. Buffer Oriented
+Stream Oriented
+
+Java IO is stream oriented I/O means we need to read one or more bytes at a time from a stream. It uses streams for transferring the data between a data source/sink and a java program. The I/O operation using this approach is slow.
+
+
+
+Buffer Oriented
+
+Java NIO is buffer oriented I/O approach. Data is read into a buffer from which it is further processed using a channel. In NIO we deal with the channel and buffer for I/O operation.
+
+The major difference between a channel and a stream is:
+
+A stream can be used for one-way data transfer.
+A channel provides a two-way data transfer facility.
+Therefore with the introduction of channel in java NIO, the non-blocking I/O operation can be performed.
+
+
+
+Channels
+In Java NIO, the channel is a medium that transports the data efficiently between the entity and byte buffers. It reads the data from an entity and places it inside buffer blocks for consumption.
+
+Channels act as gateway provided by java NIO to access the I/O mechanism. Usually channels have one-to-one relationship with operating system file descriptor for providing the platform independence operational feature.
+
+
+What threads spend their idle time on when not blocked in IO calls, is usually performing IO on other channels in the meantime. That is, a single thread can now manage multiple channels of input and output.
+
+
+Selectors
+Java NIO's selectors allow a single thread to monitor multiple channels of input. You can register multiple channels with a selector, then use a single thread to "select" the channels that have input available for processing, or select the channels that are ready for writing. This selector mechanism makes it easy for a single thread to manage multiple channels.
+
+
+
+
+
+What is the use of Selector
+
+The selector is used for handling the multiple channels using a single thread. Therefore it require less threads to handle the channels.
+
+Switching between the threads is expensive for operating system. Therefore, for improving the system efficiency selector is use.
+
