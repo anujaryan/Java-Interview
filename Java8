@@ -13,3 +13,21 @@ value”);
 
 
 Lambdas—anonymous functions
+
+5.What’s a Predicate?
+Ans.The word predicate is often used in mathematics to mean something function-like that takes a value
+for an argument and returns true or false
+ex.
+1.list = list.stream().filter((Inventory in) -> "green".equals(in.getColor())).collect(Collectors.toList());
+2.Group by clause
+list
+
+6.Collections is mostly about storing and accessing data, whereas Streams is mostly
+about describing computations on data
+
+7.strategy design pattern,[1] which lets you define a family of algorithms, encapsulate
+each algorithm (called a strategy), and select an algorithm at run-time
+8.Anonymous classes are like the local classes (a class defined in a block)
+8.1 anonymous classes don’t have a name. They allow you to declare and instantiate a class at the same time.
+they allow you to create ad hoc implementations
+ex. evenlist = evenlist.stream().filter((Integer i) -> i % 2 == 0).collect(Collectors.toList());
