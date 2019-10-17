@@ -1,0 +1,15 @@
+1.a stream is a
+sequence of data items that are conceptually produced one at a time—a program might read
+items from an input stream one by one and similarly write items to an output stream. The
+output stream of one program could well be the input stream of another.
+
+2.Stream<T>  include java.util.Stream
+
+3.synchronization
+forces code to execute sequentially, which works against the goal of parallelism.
+
+4.Java 8 method reference :: syntax (meaning “use this method as a
+value”);
+
+
+Lambdas—anonymous functions
