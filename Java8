@@ -31,3 +31,115 @@ each algorithm (called a strategy), and select an algorithm at run-time
 8.1 anonymous classes don’t have a name. They allow you to declare and instantiate a class at the same time.
 they allow you to create ad hoc implementations
 ex. evenlist = evenlist.stream().filter((Integer i) -> i % 2 == 0).collect(Collectors.toList());
+
+
+9.What is lamdas ?
+Ans.A lambda expression can be understood as a concise representation of an anonymous function
+that can be passed around: it doesn’t have a name, but it has a list of parameters, a body, a
+return type, and also possibly a list of exceptions that can be thrown.
+
+
+Anonymous— We say anonymous because it doesn’t have an explicit name like a method would
+normally have: less to write and think about!
+ Function— We say function because a lambda isn’t associated with a particular class like a method is.
+But like a method, a lambda has a list of parameters, a body, a return type, and a possible list of
+exceptions that can be thrown.
+ Passed around— A lambda expression can be passed as argument to a method or stored in a
+variable.
+ Concise— You don’t need to write a lot of boilerplate like you do for anonymous classes.
+
+ex:-> Comparator<Inventory> lbyWeight = (Inventory i1, Inventory i2) -> i1.getPrice().compareTo(i2.getPrice());
+
+Valid Lamda->
+1.(String a)-> a.length();( has single parameter a of string type and return int here it doesn’t have return , the return is implied) 
+2.(Apple a)-> a.getWeight();
+3.()->42     (has no parameters but return int value)
+
+Invalid Lamda-> 
+4. (Integer i) -> return "Alan" + i;(return is a control-flow statement. To make this lambda valid, curly braces are required as
+follows: (Integer i) -> {return "Alan" + i;}.)
+5. (String s) -> {"Iron Man";}  (“Iron Man” is an expression, not a statement. To make this lambda valid, you can remove the
+curly braces and semicolon as follows: (String s) -> "Iron Man". Or if you prefer, you can use an
+explicit return statement as follows: (String s) -> {return "Iron Man";}.)
+
+
+10.Where and how to use lambdas?
+ans.You can use a lambda expression in the context of a
+functional interface.
+
+11.Functional interface?
+Ans. a functional interface is an interface that specifies exactly one abstract method.
+ex.public interface Comparator{
+  public int compare(T o1,T O2)
+} 
+
+2.public interface Runnable{
+  public void run()
+} 
+
+3.public interface Callable<V>{
+  public V call()
+} 
+4.2.public interface PriviledgeAction<V>{
+  public T run()
+  
+  
+} 
+
+
+12.Function descriptor?
+The signature of the abstract method of the functional interface essentially describes the
+signature of the lambda expression. We call this abstract method a function descriptor.
+
+
+
+Functional interface                  Function descriptor                               Primitive specializations
+Predicate<T>                         T -> boolean                                     IntPredicate, LongPredicate, DoublePredicate
+Consumer<T>                          T -> void                                        IntConsumer, LongConsumer, DoubleConsumer
+Function<T, R>                       T -> R                                           IntFunction<R>, IntToDoubleFunction,                   IntToLongFunction,                                                                     LongFunction<R>,   LongToDoubleFunction,
+                                                                                       LongToIntFunction, DoubleFunction<R>, ToIntFunction<T>,
+ToDoubleFunction<T>, ToLongFunction<T>
+Supplier<T>                          () -> T                                             BooleanSupplier, IntSupplier, LongSupplier, DoubleSupplier
+UnaryOperator<T>                       T -> T                                          IntUnaryOperator, LongUnaryOperator, DoubleUnaryOperator
+BinaryOperator<T>                   (T, T) -> T                                         IntBinaryOperator, LongBinaryOperator, DoubleBinaryOperator
+BiPredicate<L, R> (L, R) ->
+boolean
+BiConsumer<T, U>                    (T, U) -> void                                       ObjIntConsumer<T>, ObjLongConsumer<T>,
+ObjDoubleConsumer<T>
+BiFunction<T, U, R>                 (T, U) -> R                                             ToIntBiFunction<T, U>, ToLongBiFunction<T, U>,ToDoubleBiFunction<T,U>
+
+ 
+HOw to use:	Predicate<String> noEmptyString = (String s) -> s.isEmpty(); //( predicate has this method boolean test())
+
+13. Consumer
+The java.util.function.Consumer<T> interface defines an abstract method named accept that
+takes an object of generic type T and returns no result (void).
+Uses: which takes a list of Integers and applies an operation on each
+element of that list.
+How to use: Consumer<String> printConsumer = (String s) -> System.out.println(s); // Consumer has void accept(T t))
+
+14.Function
+The java.util.function.Function<T, R> interface defines an abstract method named apply that
+takes an object of generic type T as input and returns an object of generic type R.
+Uses: when you need to define a lambda that maps information from an input object to
+an output (for example, extracting the weight of an apple or mapping a string to its length).
+
+How to use: Function<String, Integer> funlamda = (String s) -> s.length();// have abstract method called R apply( T t) 
+
+
+15.What is boxing?
+a mechanism to convert a
+primitive type into a corresponding reference type. This mechanism is called boxing.
+
+6.The
+opposite approach (that is, converting a reference type into a corresponding primitive type) is
+called unboxing. Java also has an autoboxing mechanism to facilitate the task for programmers:
+boxing and unboxing operations are done automatically.
+
+
+16.Type checking, type inference, and restrictions?
+The type of a lambda is deduced from the context in which the lambda is used. The type
+expected for the lambda expression inside the context (for example, a method parameter that
+it’s passed to or a local variable that it’s assigned to) is called the target type.
+
+
