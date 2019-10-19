@@ -142,4 +142,89 @@ The type of a lambda is deduced from the context in which the lambda is used. Th
 expected for the lambda expression inside the context (for example, a method parameter that
 it’s passed to or a local variable that it’s assigned to) is called the target type.
 
+17.lambda expressions can capture local variables that are assigned to them only once.
+18.capturing an instance variable can be seen as capturing the final local variable
+int portnumber=8080
+Runnable r=()->System.out.println(portnumber)
+portnumber=8087 will throw compile time error like local variable reference from lamda expressions must be final or effectively final
+
+19.Method references?
+Method references can be seen as shorthand for lambdas calling only a specific method.
+why : your code can gain better readability.
+ex:(str, i) -> str.substring(i) String::substring
+
+19.1. Constructor Method reference default 
+Supplier<LamdaVariableReference> c1 = LamdaVariableReference::new;
+		LamdaVariableReference v1 = c1.get();// give OBject
+
+19.2 Constructor with one arguments
+
+Function<Integer, LamdaVariableReference> f1 = LamdaVariableReference::new;
+LamdaVariableReference v2 = f1.apply(100);
+
+this equivalent to 
+Function<Integer, LamdaVariableReference> f1 = (Integer w)->new LamdaVariableReference(w);
+
+LamdaVariableReference v2=f1.apply(190);
+
+19.3 constructor with 2 arguments
+BiFunction<String,Integer,LamdaVariableReference> bifi=LamdaVariableReference::new
+LamdaVariableReference v3=bifi.apply("Anuj",300);
+
+lambda term:
+BiFunction<String,Integer,LamdaVariableReference> bifi=(String a,Integer b)->new LamdaVariableReference(a,b);
+LamdaVariableReference v3=bifi.apply("green",20);
+
+
+19.4 for 3 arguments we have create custome interface java does not provide for that:
+public interface TriFunction<T, U, V, R>{
+R apply(T t, U u, V v);
+}
+
+like that.
+
+TriFunction<Integer, Integer, Integer, Color> colorFactory = Color::new;
+Color c1=colorFactory.apply(1,2,3);
+
+19.5 Comparator<Apple> c = Comparator.comparing(Apple::getWeight);
+
+19.6 if we want reverse the student list then
+Comparator<Apple> c = Comparator.comparing(Apple::getWeight).reversed();
+
+19.7 Chaining Comparators
+studentlist.sort(comparing(Student::getAge).thenComparing(Student::getName));
+
+19.8 Composing Predicates
+Predicate<Student> isMore25 = (Student s) -> s.getAge() > 20;
+		isMore25.and(s -> "anuj".equals(s.getName()));
+		
+Note that the precedence of
+methods and and or is managed from left to right using their positions in the chain.
+
+19.9. Composing Functions
+
+	Function<Integer, Integer> f = x -> x + 2;
+	Function<Integer, Integer> g = x -> x * 5;
+    Function<Integer, Integer> h = f.andThen(g);
+
+	System.out.println(h.apply(10)); result: 60
+	
+	this is similar to math gof(x)	
+	
+compose()-> first apply function given as argument to compose and then apply to function to the result.
+
+Function<Integer, Integer> f = x -> x + 2;
+	Function<Integer, Integer> g = x -> x * 5;
+    Function<Integer, Integer> h = f.compose(g);
+
+	System.out.println(h.apply(10)); result: 52
+	
+Where use: Function<String, String> addHeader = Letter::addHeader;
+		Function<String, String> transformationPipeline = addHeader.andThen(Letter::addFooter)
+				.andThen(Letter::checkSpelling);
+
+Apply multiple pipeline operator 				
+
+
+
 
