@@ -223,7 +223,672 @@ Where use: Function<String, String> addHeader = Letter::addHeader;
 		Function<String, String> transformationPipeline = addHeader.andThen(Letter::addFooter)
 				.andThen(Letter::checkSpelling);
 
-Apply multiple pipeline operator 				
+Apply multiple pipeline operator 
+
+
+Introducing streams
+
+1.What is Stream?
+Streams are an update to the Java API that lets you manipulate collections of data in a
+declarative way.
+
+what exactly is a stream? A short definition is “a sequence of elements from a source
+that supports data processing operations.”
+
+Let’s break down this definition step by step:
+
+1.1Sequence of elements— Like a collection, a stream provides an interface to a sequenced set of
+
+]']
+/
+\/*values of a specific element type. Because collections are data
+u]'= bbo0t::println);
+
+
+Other libraries: Guava, Apache, and lambdaj
+
+2.To summarize, the Streams API in Java 8 lets you write code that’s.
+
+ Declarative— More concise and readable
+ Composable— Greater flexibility
+ Parallelizable— Better performance
+
+
+2.No result is produced, and indeed no element from menu is even selected, until collect is invoked.
+
+3. // highcoloriesdishes
+
+		System.out.println("High Colories DISHES...");
+		List<String> highcoloriesdishes = obj.menu.stream().filter(x -> x.getCalories() > 300).map(Dishes::getName)
+				.limit(3).collect(toList());
+
+		highcoloriesdishes.forEach(System.out::println);
+		
+		
+filter—Takes a lambda to exclude certain elements from the stream. In this case, you select dishes
+that have more than 300 calories by passing the lambda d -> d.getCalories() > 300.
+ map—Takes a lambda to transform an element into another one or to extract information. In this case,
+you extract the name for each dish by passing the method reference Dish::getName, which is
+equivalent to the lambda d -> d.getName().
+ limit—Truncates a stream to contain no more than a given number of elements.
+ collect—Converts a stream into another form. In this case you convert the stream into a list. It looks
+like a bit of magic; we describe how collect works in more detail in chapter 6. At the moment, you can
+see collect as an operation that takes as an argument various recipes for accumulating the elements of
+a stream into a summary result. Here, toList() describes a recipe for converting a stream into a list.
+
+
+
+
+4. Streams vs. collections
+
+
+
+1.A collection is an in-memory data structure that holds all the values the data
+structure currently has—every element in the collection has to be computed before it can be
+added to the collection. (You can add things to, and remove them from, the collection, but at
+each moment in time, every element in the collection is stored in memory; elements have to be
+computed before becoming part of the collection
+
+2.a stream is a conceptually fixed data structure (you can’t add or remove elements
+from it) whose elements are computed on demand.a stream is like a lazily constructed
+collection: values are computed when they’re solicited by a consumer (in management speak
+this is demand-driven, or even just-in-time, manufacturing
+
+3.a collection is eagerly constructed (supplier-driven: fill your warehouse before you
+start selling, like a Christmas novelty that has a limited life). Applying this to the primes
+example, attempting to construct a collection of all prime numbers would result in a program
+loop that forever computes a new prime, adding it to the collection, but of course could never
+finish making the collection, so the consumer would never get to see it.
+
+
+difference between a stream and a collection applied to our DVD vs. internet streaming example.
+
+1.A collection in java 8 like a movies stored ON DVD and collection is eager construted and means that waiting for computation of all values
+2. A Stream in java 8 like a movie streamed over the internet and lazy constructed means  values are computed on when it neeeded.
+
+
+Another example is a browser internet search. Suppose you search for a phrase with many
+matches in Google or in an e-commerce online shop.
+of results along with their photographs to be downloaded, you get a stream whose elements are
+the best 10 or 20 matches, along with a button to click for the next 10 or 20. When you, the
+consumer, click for the next 10, the supplier computes these on demand.
+
+5.Stream Traversable only once.
+
+List<String> list = Arrays.asList("Java", "in", "Action");
+
+		Stream<String> s = list.stream();
+
+		s.forEach(x -> System.out.println(x));
+		s.forEach(x -> System.out.println(x));  
+		
+		// Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
+		
+a stream can be traversed only once. After that a stream is said
+to be consumed. You can get a new stream from the initial data source to traverse it again just
+like for an iterator.
+
+you can see a stream as a set of values spread out
+in time. In contrast, a collection is a set of values spread out in space.
+
+
+External vs. internal iteration
+1.Using the Collection interface requires iteration to be done by the user (for example, using
+for-each); this is called external iteration.
+2.The Streams library by contrast uses internal
+iteration—it does the iteration for you and takes care of storing the resulting stream value
+somewhere;
+
+
+6.Stream operations
+The Stream interface in java.util.stream.Stream defines many operations.
+List<String> highcoloriesdishes = obj.menu.stream().filter(x -> x.getCalories() > 300).map(Dishes::getName)
+				.limit(3).collect(toList());
+				
+You can see two groups of operations:
+ filter, map, and limit can be connected together to form a pipeline.
+ collect causes the pipeline to be executed and closes it.
+
+Stream operations that can be connected are called intermediate operations, and operations
+that close a stream are called terminal operations.
+
+
+I7.ntermediate operations such as filter or sorted return another stream as the return type. This
+allows the operations to be connected to form a query. What’s important is that intermediate
+operations don’t perform any processing until a terminal operation is invoked on the stream
+pipeline—they’re lazy.
+
+
+	List<String> highcoloriesdishespipe = obj.menu.stream().filter(x -> {
+			System.out.println("Filtering " + x.getCalories());
+			return x.getCalories() > 300;
+		}).map(d -> {
+			System.out.println("Mapping :" + d.getName());
+			return d.getName();
+		}).limit(3).collect(toList());
+		System.out.println(highcoloriesdishespipe);
+		
+		
+You can notice several optimizations due to the lazy nature of streams.
+First, despite the fact that many dishes have more than 300 calories, only the first three are selected! This is because
+of the limit operation and a technique called short-circuiting,
+Second, despite the fact that filter and map are two separate operations, they were merged into
+the same pass (we call this technique loop fusion).
+
+8.Terminal operations.
+
+Terminal operations produce a result from a stream pipeline. A result is any nonstream value
+such as a List, an Integer, or even void. For example, in the following pipeline, forEach is a
+terminal operation that returns void and applies a lambda to each dish in the source. Passing
+System.out.println to forEach asks it to print every Dish in the stream created from menu:
+menu.stream().forEach(System.out::println);
+
+9.Intermediate vs. terminal operations
+In the stream pipeline that follows, can you identify the intermediate and terminal operations?
+long count = menu.stream()
+.filter(d -> d.getCalories() > 300)
+.distinct()
+.limit(3)
+.count();
+
+Answer:
+The last operation in the stream pipeline count returns a long, which is a non-Stream value. It’s
+therefore a terminal operation. All previous operations, filter, distinct, limit, are connected and
+return a Stream. They are therefore intermediate operations.
+
+To summarize, working with streams in general involves three items:
+ A data source (such as a collection) to perform a query on
+ A chain of intermediate operations that form a stream pipeline
+ A terminal operation that executes the stream pipeline and produces a result.
+
+
+10.The idea behind a stream pipeline is similar to the builder pattern.[1] In the BUILDER PATTERN,
+there’s a chain of calls to set up a configuration (for streams this is a chain of intermediate
+operations), followed by a call to a build method (for streams this is a terminal operation).
+
+
+
+
+           5.Working with streams
+1.Filter Intermediate ops
+1.Select vegetarian dishes
+List<Dishes> menu=menu.stream().filter(Dishes::getVegeterian).collect(toList());
+
+Streams API manage how to
+process the data. As a consequence, the Streams API can work out several optimizations behind
+the scenes. In addition, using internal iteration, the Streams API can decide to run your code in
+parallel.
+
+
+5.1. Filtering and slicing.
+5.1.1. Filtering with a predicate.
+The Streams interface supports a filter method.
+For example, you can create a vegetarian menu by filtering all vegetarian dishes.
+List<Dishes> menu = obj.menu.stream().filter(x -> x.isVageterarian()).collect(toList());
+		menu.stream().forEach(System.out::println);
+
+5.1.2. Filtering unique elements.
+
+Streams also support a method called distinct that returns a stream with unique elements
+(according to the implementation of the hashCode and equals methods of the objects produced
+by the stream).
+The following code filters all even numbers from a list and makes
+sure that there are no duplicates.
+	List<Integer> list = Arrays.asList(1, 2, 1, 3, 2, 3, 4, 5, 6);
+		Predicate<Integer> evenlist = x -> x % 2 == 0;
+		list.stream().filter(evenlist).distinct().collect(toList()).forEach(System.out::println);
+		
+		
+5.1.4. Skipping elements
+Streams support the skip(n) method to return a stream that discards the first n elements.
+List<Dish> dishes = menu.stream()
+.filter(d -> d.getCalories() > 300)
+.skip(2)
+.collect(toList());
+
+5.2. Mapping:
+A very common data processing idiom is to select information from certain objects. For example,
+in SQL you can select a particular column from a table. The Streams API provides similar
+facilities through the map and flatMap methods.
+
+Streams support the method map, which takes a function as argument. The function is applied
+to each element, mapping it into a new element (the word mapping is used because it has a
+meaning similar to transforming but with the nuance of “creating a new version of” rather than
+“modifying”).
+
+List<String> nameList = new StreamApi().menu.stream().map(Dishes::getName).collect(toList());
+
+1.Given a list of words, you’d like to return a list of the number of characters for each word.
+
+1.1 new StreamApi().menu.stream().map(d -> d.getName().length()).collect(toList()).forEach(System.out::println);
+
+1.2 new StreamApi().menu.stream().map(Dishes::getName).map(String::length).collect(toList()).forEach(System.out::println);
+
+
+
+5.2.2. Flattening streams:
+
+how could you return a list of all the unique characters for a list of words?
+List<String> words = Arrays.asList("Hello", "Worlds");
+words.stream().map(word -> word.split(" ")).distinct().collect(toList()).forEach(System.out::println);
+
+The problem with this approach is that the lambda passed to the map method returns a String[]
+(an array of String) for each word. So the stream returned by the map method is actually of type
+Stream<String[]>.
+
+
+List<String> words = Arrays.asList("Hello", "Worlds");
+
+		words.stream().map(word -> word.split("")).flatMap(Arrays::stream).distinct().collect(toList())
+				.forEach(System.out::println);
+				
+Using the flatMap method has the effect of mapping each array not with a stream but with the
+contents of that stream. All the separate streams that were generated when using
+map(Arrays::stream) get amalgamated—flattened into a single stream.
+
+
+1. Given a list of numbers, how would you return a list of the square of each number? For
+example, given [1, 2, 3, 4, 5] you should return [1, 4, 9, 16, 25].
+
+	List<Integer> slist = Arrays.asList(1, 2, 3, 4, 5, 6);
+		slist.stream().map(PrintStreamMethod.square).collect(toList()).forEach(System.out::println);
+2.2. Given two lists of numbers, how would you return all pairs of numbers? For example, given a
+list [1, 2, 3] and a list [3, 4] you should return [(1, 3), (1, 4), (2, 3), (2, 4), (3, 3), (3, 4)]. For
+simplicity, you can represent a pair as an array with two elements.
+
+List<Integer> num1 = Arrays.asList(1, 2, 3);
+
+		List<Integer> num2 = Arrays.asList(4, 5);
+
+		List<int[]> pairs = num1.stream().flatMap(i -> num2.stream().map(j -> new int[] { i, j })).collect(toList());
+
+		pairs.forEach(x -> {
+
+			Arrays.stream(x).forEach(System.out::println);
+		});
+
+3. How would you extend the previous example to return only pairs whose sum is divisible by 3?
+For example, (2, 4) and (3, 3) are valid.
+List<int[]> pairs_3 = num1.stream()
+				.flatMap(i -> num2.stream().filter(j -> (i + j) % 3 == 0).map(j -> new int[] { i, j }))
+				.collect(toList());
+				
+5.3. Finding and matching
+6.Short-circuiting evaluation
+Some operations don’t need to process the whole stream to produce a result.
+You need only find
+out that one expression is false to deduce that the whole expression will return false,This is what short-circuiting.
+
+5.3.3. Finding an element:
+The findAny method returns an arbitrary element of the current stream. It can be used in
+conjunction with other stream operations. For example, you may wish to find a dish that’s
+vegetarian.
+Optional<Dishes> dishes = new StreamApi().menu.stream().filter(Dishes::isVageterarian).findAny();
+		System.out.println(dishes.get());
+The stream pipeline will be optimized behind the scenes to perform a single pass and finish as
+soon as a result is found by using short-circuiting.
+
+
+Optional in a nutshell
+The Optional<T> class (java.util.Optional) is a container class to represent the existence or absence of a value.
+
+isPresent() returns true if Optional contains a value, false otherwise.
+ ifPresent(Consumer<T> block) executes the given block if a value is present. We introduced the
+Consumer functional interface in chapter 3; it lets you pass a lambda that takes an argument of type
+T and returns void.
+ T get() returns the value if present; otherwise it throws a NoSuchElement-Exception.
+ T orElse(T other) returns the value if present; otherwise it returns a default value.
+
+	new StreamApi().menu.stream().filter(Dishes::isVageterarian).findAny()
+				.ifPresent(d -> System.out.println(d.getName()));
+				
+Finding the first element
+	slist.stream().map(x -> x * x).filter(x -> x % 3 == 0).findFirst().ifPresent(d -> System.out.println(d));
+
+5.4. Reducing
+1.5.4.1. Summing the elements
+int sum = slist.stream().reduce(0, (a, b) -> a + b);
+		System.out.println(sum);
+		
+Method References 
+int sum = slist.stream().reduce(0, Integer::sum);
+Optional<Integer> sum = numbers.stream().reduce((a, b) -> (a + b));
+
+
+// min and max number in list
+
+		System.out.println(slist.stream().reduce(Integer::min));
+
+		// max num in list
+
+		System.out.println(slist.stream().reduce(Integer::max));
+		
+	int count = new StreamApi().menu.stream().map(d -> 1).reduce(0, (a, b) -> a + b);
+		System.out.println("Number of dishes :" + count);
+
+Stream operations: stateless vs. stateful
+1. Operations like map and filter take each element from the input stream and produce zero or one
+result in the output stream. These operations are thus in general stateless: they don’t have an
+internal state
+
+2. But operations like reduce, sum, and max need to have internal state to accumulate the result.
+In this case the internal state is small. In our example it consisted of an int or double. The
+internal state is of bounded size no matter how many elements are in the stream being
+processed.
+		
+System.out.println(slist.stream().reduce(1, (a, b) -> a * b));
+
+Mapping to a numeric stream
+The most common methods you’ll use to convert a stream to a specialized version are mapToInt,
+mapToDouble, and mapToLong.
+	int calories = obj.menu.stream().mapToInt(Dishes::getCalories).sum();
+
+		System.out.println(calories);
+		
+// convetring back to Stream<Integer>
+		IntStream intstr = obj.menu.stream().mapToInt(Dishes::getCalories);
+
+		Stream<Integer> stream = intstr.boxed();
+		
+5.6.2. Numeric ranges
+
+But range is exclusive, whereas rangeClosed is
+inclusive
+	IntStream evenNumbers = IntStream.rangeClosed(1, 100).filter(x -> x % 2 == 0);
+		System.out.println(evenNumbers.count());
+		
+5.7.1. Streams from values
+You can create a stream with explicit values by using the static method Stream.of, which can
+take any number of parameters.
+
+Stream<String> stream = Stream.of("Java 8 ", "Lambdas ", "In ", "Action");
+stream.map(String::toUpperCase).forEach(System.out::println);
+
+5.7.2. Streams from arrays
+
+You can create a stream from an array using the static method Arrays.stream,
+
+
+Chapter 6. Collecting data with streams
+
+terminal operations do consume from a stream—
+6.1. Collectors in a nutshell:
+	Map<Currency, List<Transaction>> transactionByCurrencies = list.stream()
+				.collect(groupingBy(Transaction::getCurrency));
+6.2 count the number of dishes in the menu
+
+	long howManyOfDishes = new StreamApi().menu.stream().collect(Collectors.counting());
+		System.out.println(howManyOfDishes);
+		System.out.println(new StreamApi().menu.stream().count());
+6.3 Finding maximum and minimum in a stream of values
+
+	Comparator<Dishes> dishCaloriesComparator = Comparator.comparing(Dishes::getCalories);
+
+		Optional<Dishes> mostColorieDish = menu.stream().collect(maxBy(dishCaloriesComparator));
+		Optional<Dishes> minColorieDish = menu.stream().collect(minBy(dishCaloriesComparator));
+		System.out.println(mostColorieDish.get().getCalories());
+		System.out.println(minColorieDish.get().getCalories());
+
+6.2.3. Joining Strings
+String dishes = menu.stream().map(Dishes::getName).collect(joining(" "));
+		System.out.println(dishes);
+
+6.2.4. Generalized summarization with reduction
+System.out.println(menu.stream().collect(reducing(0, Dishes::getCalories, (i, j) -> i + j)));
+Optional<Dishes> mostCalorieDishes = menu.stream()
+				.collect(reducing((d1, d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2));
+
+		System.out.println(mostCalorieDishes.get().getCalories());
+		
+Collect vs. reduce
+
+This solution has two problems: a semantic one and a practical one. The semantic problem lies
+in the fact that the reduce method is meant to combine two values and produce a new one; it’s
+an immutable reduction. In contrast, the collect method is designed to mutate a container to
+accumulate the result it’s supposed to produce.
+
+6.7 Collection framework flexibility: doing the same operation in different ways
+		System.out.println(menu.stream().collect(reducing(0, Dishes::getCalories, Integer::sum)));
+		
+6.3. Grouping:common database operation is to group items in a set, based on one or more properties.
+Map<Dishes.Type, List<Dishes>> dishesByType = menu.stream().collect(groupingBy(Dishes::getType));
+System.out.println(dishesByType);
+
+	Map<Dishes.CaloricLevel, List<Dishes>> dishesByConsume = menu.stream().collect(groupingBy(dish -> {
+			if (dish.getCalories() <= 400)
+				return CaloricLevel.DIET;
+			else if (dish.getCalories() <= 700)
+				return CaloricLevel.NORMAL;
+			else
+				return CaloricLevel.FAT;
+		}));
+
+		System.out.println(dishesByConsume);
+		
+
+6.3.1. Multilevel grouping
+
+You can achieve multilevel grouping by using a collector created with a two-argument version of
+the Collectors.groupingBy factory method, which accepts a second argument of type collector
+besides the usual classification function. So to perform a two-level grouping, you can pass an
+inner groupingBy to the outer groupingBy, defining a second-level criterion to classify the
+stream’s items
+
+Map<Dishes.Type, Map<Dishes.CaloricLevel, List<Dishes>>> map = menu.stream()
+				.collect(groupingBy(Dishes::getType, groupingBy(dish -> {
+					if (dish.getCalories() <= 400)
+						return CaloricLevel.DIET;
+					else if (dish.getCalories() <= 700)
+						return CaloricLevel.NORMAL;
+					else
+						return CaloricLevel.FAT;
+				})
+
+				));
+
+		System.out.println(map);
+		
+
+Here the outer Map has as keys the values generated by the first-level classification function:
+“fish, meat, other.” The values of this Map are in turn other Maps, having as keys the values
+generated by the second-level classification function: “normal, diet, or fat.” Finally, the
+second-level Maps have as values the List of the elements in the stream returning the
+corresponding first- and second-level key values when applied respectively to the first and
+second classification functions: “salmon, pizza, etc.”
+
+
+6.3.2. Collecting data in subgroups
+
+Map<Dishes.Type, Long> subGroup = menu.stream().collect(groupingBy(Dishes::getType, counting()));
+		System.out.println(subGroup);
+		
+6.4. Partitioning
+Partitioning is a special case of grouping: having a predicate (a function returning a boolean),
+called a partitioning function, as a classification function.
+
+if you’re vegetarian or have invited a vegetarian friend to have dinner with you, you may be
+interested in partitioning the menu into vegetarian and nonvegetarian dishes:
+
+	Map<Boolean, List<Dishes>> partitionedMenu = menu.stream().collect(partitioningBy(Dishes::isVageterarian));
+
+		List<Dishes> list = partitionedMenu.get(true);
+		System.out.println(list);
+		System.out.println(partitionedMenu);
+		
+6.4.1. Advantages of partitioning
+Partitioning has the advantage of keeping both lists of the stream elements, for which the
+application of the partitioning function returns true or false.
+
+6.4.2. Partitioning numbers into prime and nonprime
+return IntStream.range(2, candidate).noneMatch(x -> candidate % x == 0);
+
+
+all these collectors implement the Collector
+interface
+
+
+
+7.1. Parallel streams
+A parallel stream is a stream that
+splits its elements into multiple chunks, processing each chunk with a different thread. Thus,
+you can automatically partition the workload of a given operation on all the cores of your
+multicore processor and keep all of them equally busy.
+
+7.1.1. Turning a sequential stream into a parallel one
+Stream.iterate(1L, i -> i + 1).limit(n).parallel().reduce(0L, Long::sum);
+
+Parallel streams internally use the default ForkJoinPool (you’ll learn more about the fork/join
+framework in section 7.2), which by default has as many threads as you have processors, as
+returned by Runtime.getRuntime().availableProcessors().
+
+
+But you can change the size of this pool using the system property
+
+java.util.concurrent.ForkJoinPool.common.parallelism, as in the following example:
+System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "12");
+
+
+7.2. The fork/join framework
+
+The fork/join framework was designed to recursively split a parallelizable task into smaller tasks
+and then combine the results of each subtask to produce the overall result. It’s an
+implementation of the ExecutorService interface, which distributes those subtasks to worker
+threads in a thread pool, called ForkJoinPool.
+
+
+7.3. Spliterator
+
+The Spliterator is another new interface added to Java 8; its name stands for “splitable iterator.”
+Like Iterators, Spliterators are used to traverse the elements of a source, but they’re also
+designed to do this in parallel.
+
+
+
+8.1.1. Improving code readability
+
+Java 8 features can also help improve code readability compared to previous versions:
+ You can reduce the verbosity of your code, making it easier to understand.
+ You can improve the intent of your code by using method references and the Streams API.
+We describe three simple refactorings that use lambdas, method references, and streams, which
+you can apply to your code to improve its readability:
+ Refactoring anonymous classes to lambda expressions
+ Refactoring lambda expressions to method references
+ Refactoring imperative-style data processing to streams
+
+
+Adopting functional interfaces
+First, you can’t use lambda expressions without functional interfaces.
+
+8.2. Refactoring object-oriented design patterns with lambdas
+
+we
+explore five design patterns:
+ Strategy
+ Template method
+ Observer
+ Chain of responsibility
+ Factory
+We show how lambda expressions can provide an alternative way to solve the same problem
+each design pattern is intended for.
+
+
+8.2.1. Strategy
+The strategy pattern is a common solution for representing a family of algorithms and letting
+you choose among them at runtime.
+when we showed
+you how to filter an inventory with different predicates
+
+StrategyPattern lowerCase = new StrategyPattern((String s) -> s.matches("[a-z]+"));
+		System.out.println(lowerCase.validator("aaa"));
+
+		StrategyPattern isNumerica = new StrategyPattern((String s) -> s.matches("\\d+"));
+		System.out.println(isNumerica.validator("aaa"));
+		
+		
+8.2.2. Template method
+The template method design pattern is a common solution when you need to represent the
+outline of an algorithm and have the additional flexibility to change certain parts of it.
+In other words, the template method pattern is useful when you find
+yourself in a situation such as “I’d love to use this algorithm but I need to change a few lines so it
+does what I want.”
+
+
+8.2.3. Observer
+
+The observer design pattern is a common solution when an object (called the subject) needs to
+automatically notify a list of other objects (called observers) when some event happens (for
+example, a state change). You typically come across this pattern when working with GUI
+applications. You register a set of observers on a GUI component such as button. If the button is
+clicked, the observers are notified and can execute a specific action. But the observer pattern
+isn’t limited to GUIs. For example, the observer design pattern is also suitable in a situation
+where several traders (observers) may wish to react to the change of price of a stock (subject).
+
+
+8.2.4. Chain of responsibility
+
+The chain of responsibility pattern is a common solution to create a chain of processing objects
+(such as a chain of operations). One processing object may do some work and pass the result to
+another object, which then also does some work and passes it on to yet another processing
+object,
+
+8.2.5. Factory
+The factory design pattern lets you create objects without exposing the instantiation logic to the
+client.
+
+let’s say you’re working for a bank and they need a way of creating different
+financial products: loans, bonds, stocks, and so on.
+Typically you’d create a Factory class with a method that’s responsible for the creation of
+different objects,
+
+8.3.1. Testing the behavior of a visible lambda
+1.Debugging is difficult in lambda expression
+
+
+Chapter 9. Default methods
+
+First, Java 8 allows static methods inside interfaces. Second, Java 8
+introduces a new feature called default methods that allows you to provide a default
+implementation for methods in an interface.
+
+
+Abstract classes vs. interfaces in Java 8
+
+First, a class can extend only from one abstract class, but a class can implement multiple
+interfaces.
+Second, an abstract class can enforce a common state through instance variables (fields). An
+interface can’t have instance variables.
+
+
+what if a class implements two interfaces that have the same default method signature?
+
+9.4.1. Three resolution rules to know
+There are three rules to follow when a class inherits a method with the same signature from
+multiple places (such as another class or interface):
+1. Classes always win. A method declaration in the class or a superclass takes priority over any
+default method declaration.
+2. Otherwise, sub-interfaces win: the method with the same signature in the most specific
+default-providing interface is selected. (If B extends A, B is more specific than A).
+3. Finally, if the choice is still ambiguous, the class inheriting from multiple interfaces has to
+explicitly select which default method implementation to use by overriding it and calling the
+desired method explicitly.
+
+@Override
+	public void hello() {
+		B.super.hello();
+
+	}
+	
+	Java 8 introduces the new syntax X.super.m(...) where X is the superinterface whose
+method m you want to call. For example, if you want C to use the default method from B, it looks
+
+
+
+Chapter 10. Using Optional as a better alternative to null
+
+ It breaks Java philosophy. Java always hides pointers from developers except in one case: the null
+pointer.
+
+
 
 
 
