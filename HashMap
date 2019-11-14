@@ -1,5 +1,115 @@
+q39.Can you explain a few exception handling best practices?
+Ans.1. Prefer Specific Exceptions
+2. Document the Exceptions You Specify
+3. Throw Exceptions With Descriptive Messages
+4. Catch the Most Specific Exception First
+5. Don’t Catch Throwable
+6. Don’t Ignore Exceptions
+7.Wrap the Exception Without Consuming It
+
+Q38.How does try with resources work?
+Ans.1. Automatic Resource Management(ARM) using try-with-resources from Java 7 onwards. The try-with-resources statement is a try statement that declares one or more resources.
+2.This statement ensures that each resource is closed at the end of the statement which eases working with external resources that need to be disposed or closed in case of errors or successful completion of a code block.
+3. What is a resource?
+A resource is an object that must be closed after the program is finished using it. Any object that implements java.lang.AutoCloseable, which includes all objects which implement java.io.Closeable, can be used as a resource.
+
+In try-with-resources method there is no use of finally block. the file resource is opened in try block inside small brackets. Only the objects of those classes can be opened within the block which implements AutoCloseable interface and those object should also be local. The resource will be closed automatically regardless of whether try statement completes normally or abruptly.
+
+static String readFirstLineFromFile(String path) throws IOException
+{
+    try (BufferedReader br = new BufferedReader(new FileReader(path)))
+    {
+        return br.readLine();
+    }
+}
+
+Multiple resources can be used inside a try-with-resources block and have them all automatically closed. In this case, the resources will be closed in the reverse order in which they were created inside the brackets.
+
+
+Q37.What happens when a variable is marked as volatile?
+Ans. Basically, the value of a volatile field becomes visible to all readers (other threads in particular) after a write operation completes on it. Without volatile, readers could see some non-updated value.
+2.the volatile modifier guarantees that any thread that reads a field will see the most recently written value
+public class Singleton {
+    private static volatile Singleton _instance; // volatile variable
+    public static Singleton getInstance() {
+        if (_instance == null) {
+            synchronized (Singleton.class) {
+                if (_instance == null)
+                    _instance = new Singleton();
+            }
+        }
+        return _instance;
+    }
+}
+We are creating instance lazily at the time the first request comes.
+
+If we do not make the _instance variable volatile then the Thread which is creating the instance of Singleton is not able to communicate to the other thread. So if Thread A is creating Singleton instance and just after creation, the CPU corrupts etc, all other threads will not be able to see the value of _instance as not null and they will believe it is still assigned null.
+
+Why does this happen? Because reader threads are not doing any locking and until the writer thread comes out of a synchronized block, the memory will not be synchronized and value of _instance will not be updated in main memory. With the Volatile keyword in Java, this is handled by Java itself and such updates will be visible by all reader threads.
+
+Conclusion: volatile keyword is also used to communicate the content of memory between threads.
+
+
+Important point about volatile:
+
+Synchronization in Java is possible by using Java keywords synchronized and volatile and locks.
+In Java, we can not have synchronized variable. Using synchronized keyword with a variable is illegal and will result in compilation error. Instead of using the synchronized variable in Java, you can use the java volatile variable, which will instruct JVM threads to read the value of volatile variable from main memory and don’t cache it locally.
+If a variable is not shared between multiple threads then there is no need to use the volatile keyword.
+source
+
+Example usage of volatile:
+
+public class Singleton {
+    private static volatile Singleton _instance; // volatile variable
+    public static Singleton getInstance() {
+        if (_instance == null) {
+            synchronized (Singleton.class) {
+                if (_instance == null)
+                    _instance = new Singleton();
+            }
+        }
+        return _instance;
+    }
+}
+We are creating instance lazily at the time the first request comes.
+
+If we do not make the _instance variable volatile then the Thread which is creating the instance of Singleton is not able to communicate to the other thread. So if Thread A is creating Singleton instance and just after creation, the CPU corrupts etc, all other threads will not be able to see the value of _instance as not null and they will believe it is still assigned null.
+
+Why does this happen? Because reader threads are not doing any locking and until the writer thread comes out of a synchronized block, the memory will not be synchronized and value of _instance will not be updated in main memory. With the Volatile keyword in Java, this is handled by Java itself and such updates will be visible by all reader threads.
+
+Conclusion: volatile keyword is also used to communicate the content of memory between threads.
+
+Example usage of without volatile:
+
+public class Singleton{    
+    private static Singleton _instance;   //without volatile variable
+    public static Singleton getInstance(){   
+          if(_instance == null){  
+              synchronized(Singleton.class){  
+               if(_instance == null) _instance = new Singleton(); 
+      } 
+     }   
+    return _instance;  
+    }
+The code above is not thread-safe. Although it checks the value of instance once again within the synchronized block (for performance reasons), the JIT compiler can rearrange the bytecode in a way that the reference to the instance is set before the constructor has finished its execution. This means the method getInstance() returns an object that may not have been initialized completely. To make the code thread-safe, the keyword volatile can be used since Java 5 for the instance variable. Variables that are marked as volatile get only visible to other threads once the constructor of the object has finished its execution completely
+
+
+
+Q36.What is a final argument?
+Ans.public void doSomething(final int i, final int j)
+{
+  // cannot change the value of i or j here...
+  // any change would be visible only inside the method...
+}
+
+The final keyword when used for parameters/variables in Java marks the reference as final. In case of passing an object to another method, the system creates a copy of the reference variable and passes it to the method. By marking the new references final, you protect them from reassignment. It's considered sometimes a good coding practice.
+
 
 Q35.When do you use an abstract class?
+Ans. 1. I know basic use of abstract classes is to create templates for future classes
+2.Abstract Classes are a good fit if you want to provide implementation details to your children but don't want to allow an instance of your class to be directly instantiated.
+–> The purpose of an abstract class is to provide a common definition of a base class that multiple derived classes can share.
+3.Abstract classes/methods are generally used when a class provides some high level functionality but leaves out certain details to be implemented by derived classes. Making the class/method abstract ensures that it cannot be used on its own, but must be specialized to define the details that have been left out of the high level implementation
 Q34.Can super class reference variable can hold an object of sub class?
 Ans.
 1.First approach (Referencing using Superclass reference): A reference variable of a superclass can be used to a refer any subclass object derived from that superclass. If the methods are present in SuperClass, but overridden by SubClass, it will be the overridden method that will be executed.
