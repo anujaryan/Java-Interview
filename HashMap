@@ -1,4 +1,61 @@
-q39.Can you explain a few exception handling best practices?
+Q42.What is serialization?
+Ans.
+1.Serialization is a mechanism by which we convert object state into byte stream so it can easily tranmitted over network.
+Deserialization is reverse process of serialization convert byte stream object into  java actual object in memory.
+Case 1: If superclass is serializable then subclass is automatically serializable : If superclass is Serializable, then by default every subclass is serializable. Hence, even though subclass doesn’t implement Serializable interface( and if it’s superclass implements Serializable), then we can serialize subclass object.
+2.If a superclass is not serializable then subclass can still be serialized : Even though superclass doesn’t implements Serializable interface, we can serialize subclass object if subclass itself implements Serializable interface. So we can say that to serialize subclass object, superclass need not to be serializable. But what happens with the instances of superclass during serialization in this case.
+Q43.What happens when a class is serializable but its superclass is not ?
+Ans.Serialization: At the time of serialization, if any instance variable is inheriting from non-serializable superclass, then JVM ignores original value of that instance variable and save default value to the file.
+De- Serialization: At the time of de-serialization, if any non-serializable superclass is present, then JVM will execute instance control flow in the superclass. To execute instance control flow in a class, JVM will always invoke default(no-arg) constructor of that class. So every non-serializable superclass must necessarily contain default constructor, otherwise we will get runtime-exception.
+
+Q44.If the superclass is serializable but we don’t want the subclass to be serialized 
+here is no direct way to prevent subclass from serialization in java. One possible way by which a programmer can achieve this is by implementing the writeObject() and readObject() methods in the subclass and needs to throw NotSerializableException from these methods. These methods are executed during serialization and de-serialization respectively. By overriding these methods, we are just implementing our own custom serialization.
+Q46.Are the values of static variables stored when an object is serialized?
+Ans.Instance Variables: These variables are serialized, so during deserialization we will get back the serialized state.
+
+Static Variables: These variables are not serialized, So during deserialization static variable value will loaded from the class.(Current value will be loaded.)
+
+transient Variables: transient variables are not serialized, so during deserialization those variables will be initialized with corresponding default values (ex: for objects null, int 0).
+
+Super class variables: If super class also implemented Serializable interface then those variables will be serialized, otherwise it won't serialize the super class variables. and while deserializing, JVM will run default constructor in super class and populates the default values. Same thing will happen for all superclasses.
+
+serialVersionUID is a special static variable used by the serialization and deserialization process, to verify that a local class is compatible with the class used to serialize an object. It's not just a static variable as others, which are definitely not serialized.
+
+When an object of a class is first serialized, a class descriptor containing among other things the class name and serial version UID is written to the stream. When this is deserialized, the JVM checks if the serial version UID read from the stream is the same as the one of the local class. If they're not, it doesn't even try to deserialize the object, because it knows the classes are incompatible.
+
+serialVersionUID is special and is not subject to these rules. There is code within the serialization machinery that specifically handles this field to perform the automatic version checks
+
+
+Q40.What are asserts used for?
+Ans.An assertion allows testing the correctness of any assumptions that have been made in the program.
+assert age >= 20 : " under age";
+Q41.What is tokenizing?
+Ans.StringTokenizer class in Java is used to break a string into tokens.
+A StringTokenizer object internally maintains a current position within the string to be tokenized.
+
+StringTokenizer(String str) :
+str is string to be tokenized.
+Considers default delimiters like new line, space, tab, 
+carriage return and form feed.
+
+StringTokenizer(String str, String delim) :
+delim is set of delimiters that are used to tokenize
+the given string.
+
+StringTokenizer(String str, String delim, boolean flag):
+The first two parameters have same meaning.  The flag 
+serves following purpose.
+
+If the flag is false, delimiter characters serve to 
+separate tokens. For example, if string is "hello geeks"
+and delimiter is " ", then tokens are "hello" and "geeks".
+
+If the flag is true, delimiter characters are 
+considered to be tokens. For example, if string is "hello
+ geeks" and delimiter is " ", then tokens are "hello", " " 
+and "geeks".
+
+Q39.Can you explain a few exception handling best practices?
 Ans.1. Prefer Specific Exceptions
 2. Document the Exceptions You Specify
 3. Throw Exceptions With Descriptive Messages
