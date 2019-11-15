@@ -1,0 +1,20 @@
+1.difference-between-the-apache-http-server-and-apache-tomcat?
+Ans.
+1.Apache Tomcat->
+Apache Tomcat is used to deploy your Java Servlets and JSPs. So in your Java project you can build your WAR (short for Web ARchive) file, and just drop it in the deploy directory in Tomcat.
+2.Tomcat includes Catalina, which is a servlet container. A servlet;
+3.Coyote is the module in Tomcat responsible for web serving. Catalina is the module that does Servlets. Jasper is the module that handles JSPs.
+Tomcat = ( Web Server + Servlet container + JSP environment )
+4.The web server is ON by default when you run Tomcat’s startup.sh script, listening on port 8080 for incoming connections (HTTP calls). Tomcat is pure Java, with its own web server implementation (Coyote)
+5.where tomcat server is actually a servlet container which can serve java servlet requests.
+
+
+an apache server is an http server which can serve any simple http requests, where tomcat server is actually a servlet container which can serve java servlet requests.
+
+Web server [apache] process web client (web browsers) requests and forwards it to servlet container [tomcat] and container process the requests and sends response which gets forwarded by web server to the web client [browser]
+
+2.Apache:
+1. Apache is an HTTP Server, serving HTTP
+2.The Apache HTTP Server (AHS), in contrast, has a completely separate implementation of a web server, using native C/C++ code. AHS is very flexible and powerful, but is often overkill. Tomcat's own web server works very well. Use AHS only if truly needed.
+3.The HTTP server, by itself, is best for serving up static content... html files, images
+4.an apache server is an http server which can serve any simple http requests
