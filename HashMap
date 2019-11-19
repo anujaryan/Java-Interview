@@ -1,3 +1,217 @@
+Q1.What are the important methods that are declared in the collection interface?
+Ans.Most important methods declared in the collection interface are the methods to add and remove an element.
+size() methods returns number of elements in the collection
+interface Collection<E> extends Iterable<E>
+{
+  boolean add(E paramE);
+  boolean remove(Object paramObject);
+
+  int size();
+  boolean isEmpty();
+  void clear();
+
+  boolean contains(Object paramObject);
+  boolean containsAll(Collection<?> paramCollection);
+  
+  boolean addAll(Collection<? extends E> paramCollection);
+  boolean removeAll(Collection<?> paramCollection);
+  boolean retainAll(Collection<?> paramCollection);
+  
+
+  Iterator<E> iterator();
+
+  //A NUMBER OF OTHER METHODS AS WELL..
+}
+
+Q2.Why do we need Collections in Java?
+Ans.Arrays are not dynamic. Once an array of a particular size is declared, the size cannot be modified. To add a new element to the array, a new array has to be created with bigger size and all the elements from the old array copied to new array.
+
+Collections are used in situations where data is dynamic. Collections allow adding an element, deleting an element and host of other operations. There are a number of Collections in Java allowing to choose the right Collection for the right context.
+
+
+Q3.Can you explain briefly about the List Interface?
+Ans.List interface extends Collection interface. So, it contains all methods defined in the Collection interface. In addition, List interface allows operation specifying the position of the element in the Collection
+2.any implementation of the List interface would maintain the insertion order.
+3.When a new element is inserted without specifying a position, it is inserted at the end of the list of elements.
+4.However, We can also use the void add(int position, E paramE); method to insert an element at a specific position
+
+interface List<E> extends Collection<E>
+{
+  boolean addAll(int paramInt, Collection<? extends E> paramCollection);
+
+  E get(int paramInt);
+  E set(int paramInt, E paramE);
+
+  void add(int paramInt, E paramE);
+  E remove(int paramInt);
+
+  int indexOf(Object paramObject);
+  int lastIndexOf(Object paramObject);
+
+  ListIterator<E> listIterator();
+  ListIterator<E> listIterator(int paramInt);
+  List<E> subList(int paramInt1, int paramInt2);
+}
+
+
+Q5.Can you briefly explain about the Map Interface?
+Ans.
+1.First and foremost, Map interface does not extend Collection interface. So, it does not inherit any of the methods from the Collection interface
+2.A Map interface supports Collections that use a key value pair. A key-value pair is a set of linked data items: a key, which is a unique identifier for some item of data, and the value, which is either the data or a pointer to the data. Key-value pairs are used in lookup tables, hash tables and configuration files. A key value pair in a Map interface is called an Entry.
+
+interface Map<K, V>
+{
+  int size();
+  boolean isEmpty();
+
+  boolean containsKey(Object paramObject);
+  boolean containsValue(Object paramObject);
+
+  V get(Object paramObject);
+  V put(K paramK, V paramV);
+  V remove(Object paramObject);
+
+  void putAll(Map<? extends K, ? extends V> paramMap);
+  void clear();
+
+  Set<K> keySet();
+  Collection<V> values();
+  Set<Entry<K, V>> entrySet();
+
+  boolean equals(Object paramObject);
+  int hashCode();
+
+  public static abstract interface Entry<K, V>
+  {
+    K getKey();
+    V getValue();
+    V setValue(V paramV);
+    boolean equals(Object paramObject);
+    int hashCode();
+  }
+}
+Q6.What is the difference between Set and SortedSet?
+Ans.SortedSet Interface extends the Set Interface. Both Set and SortedSet do not allow duplicate elements.
+2.Main difference between Set and SortedSet is - an implementation of SortedSet interface maintains its elements in a sorted order. Set interface does not guarantee any Order.
+
+public interface SortedSet<E> extends Set<E> {
+    
+    SortedSet<E> subSet(E fromElement, E toElement);
+    SortedSet<E> headSet(E toElement);
+    SortedSet<E> tailSet(E fromElement);
+    
+    E first();
+    E last();
+
+    Comparator<? super E> comparator();
+}
+
+Q7.What is difference between Map and SortedMap?
+Ans.SortedMap interface extends the Map interface. In addition, an implementation of SortedMap interface maintains keys in a sorted order.
+
+public interface SortedMap<K, V> extends Map<K, V> {
+    Comparator<? super K> comparator();
+
+    SortedMap<K, V> subMap(K fromKey, K toKey);
+
+    SortedMap<K, V> headMap(K toKey);
+
+    SortedMap<K, V> tailMap(K fromKey);
+
+    K firstKey();
+
+    K lastKey();
+}
+
+Q8.Explain briefly about Queue Interface?
+Ans.Queue Interface extends Collection interface. Queue Interface is typically used for implementation holding elements in order for some processing.
+2.Queue interface offers methods peek() and poll() which get the element at head of the queue. The difference is that poll() method removes the head from queue also. peek() would keep head of the queue unchanged.
+interface Queue<E> extends Collection<E>
+{
+  boolean offer(E paramE);
+  E remove();
+  E poll();
+  E element();
+  E peek();
+}
+
+Q9.Explain briefly about Iterator?
+Ans.
+1.Iterator interface enables us to iterate (loop around) a collection. All collections define a method iterator() that gets an iterator of the collection.
+2.hasNext() checks if there is another element in the collection being iterated. next() gets the next element.
+
+public interface Iterator<E> {
+    boolean hasNext();
+
+    E next();
+}
+Q10.What is LinkedList? What interfaces does it implement? How is it different from an ArrayList?
+Ans.Linked List extends List and Queue.Other than operations exposed by the Queue interface, LinkedList has the same operations as an ArrayList. However, the underlying implementation of Linked List is different from that of an ArrayList.
+2.ArrayList uses an Array kind of structure to store elements. So, inserting and deleting from an ArrayList are expensive operations. However, search of an ArrayList is faster than LinkedList.
+3.LinkedList uses a linked representation. Each object holds a link to the next element. Hence, insertion and deletion are faster than ArrayList. But searching is slower.
+
+Q11.What is a TreeSet? How is different from a HashSet?
+Ans.TreeSet implements Set, SortedSet and NavigableSet interfaces.TreeSet is similar to HashSet except that it stores element’s in Sorted Order.
+Q12.What are the important methods in the NavigableSet interface?
+Ans.Lower method finds the highest element lower than specified element. Floor method finds the highest element lower than or equal to specified element. Corresponding methods for finding lowest number higher than specified element are higher and ceiling.
+
+Q12.What is a PriorityQueue?
+Ans.PriorityQueue implements the Queue interface.
+//Using default constructor - uses natural ordering of numbers
+//Smaller numbers have higher priority
+PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>();
+//This comparator gives high priority to the biggest number.
+Comparator reverseComparator = new Comparator<Integer>() {
+    public int compare(Integer paramT1,
+            Integer paramT2) {
+        return paramT2 - paramT1;
+    }
+
+};
+
+
+Q13.What is the difference between synchronized and concurrent collections in Java?
+Ans.Synchronized collections are implemented using synchronized methods and synchronized blocks. Only one thread can executing any of the synchronized code at a given point in time. This places severe restrictions on the concurrency of threads – thereby affecting performance of the application. All the pre Java 5 synchronized collections (HashTable & Vector, for example) use this approach.
+
+Q14.Explain about the new concurrent collections in Java?
+Ans.Post Java 5, collections using new approaches to synchronization are available in Java. These are called concurrent collections.
+
+Copy on Write
+Compare and Swap
+Locks
+
+Q14.Explain about CopyOnWrite concurrent collections approach?
+Ans.Important points about Copy on Write approach
+
+All values in collection are stored in an internal immutable (not-changeable) array. A new array is created if there is any modification to the collection.
+Read operations are not synchronized. Only write operations are synchronized.
+Ex. CopyOnWriteArrayList & CopyOnWriteArraySet are implementations of this approach.
+
+Q15.What is CompareAndSwap approach?
+Compare and Swap is one of the new approaches (Java 5) introduced in java to handle synchronization. In traditional approach, a method which modifies a member variable used by multiple threads is completely synchronized – to prevent other threads accessing stale value.
+
+In compare and swap approach, instead of synchronizing entire method, the value of the member variable before calculation is cached. After the calculation, the cached value is compared with the current value of member variable. If the value is not modified, the calculated result is stored into the member variable. If another thread has modified the value, then the calculation can be performed again.
+
+Ex.ConcurrentLinkedQueue uses this approach.
+
+Q16.What is a Lock? How is it different from using synchronized approach?
+When 10 methods are declared as synchronized, only one of them is executed by any of the threads at any point in time. This has severe performance impact.
+
+Another new approach introduced in Java 5 is to use lock and unlock methods. Lock and unlock methods are used to divide methods into different blocks and help enhance concurrency. The 10 methods can be divided into different blocks, which can be synchronized based on different variables.
+
+Q17.When does a Java collection throw UnsupportedOperationException?
+Ans.All Java Collections extend Collection interface. So, they have to implement all the methods in the Collection interface. However, certain Java collections are optimized to be used in specific conditions and do not support all the Collection operations (methods). When an unsupported operation is called on a Collection, the Collection Implementation would throw an UnsupportedOperationException.
+2.Arrays.asList returns a fixed-size list backed by the specified array. When an attempt is made to add or remove from this collection an UnsupportedOperationException is thrown.
+3.List<String> list=Arrays.asList(new String[]{"ac","bddefe"});
+list.remove();//throws UnsupportedOperationException
+
+Q18.Intermediate Operations are of two kinds
+Ans.Stateful : Elements need to be compared against one another (sort, distinct etc)
+Stateless : No need for comparing with other elements (map, filter etc).
+
+Q19.What is BlockedQueue in Java?
+BlockedQueue interface is introduced in Java specifically to address specific needs of some Producer Consumer scenarios. BlockedQueue allows the consumer to wait (for a specified time or infinitely) for an element to become availabl.
+
 Q42.What is serialization?
 Ans.
 1.Serialization is a mechanism by which we convert object state into byte stream so it can easily tranmitted over network.
