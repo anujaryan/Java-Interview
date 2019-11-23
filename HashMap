@@ -1,3 +1,133 @@
+Q1.What are Generics?
+Ans.Generics was added in Java 5 to provide compile-time type checking and removing risk of ClassCastException that was common while working with collection classes.
+1.Generics are used to create Generic Classes and Generic methods which can work with different Types(Classes).
+
+List list = new ArrayList();
+list.add("abc");
+list.add(new Integer(5)); //OK
+
+for(Object obj : list){
+	//type casting leading to ClassCastException at runtime
+    String str=(String) obj; 
+}
+Above code compiles fine but throws ClassCastException at runtime because we are trying to cast Object in the list to String whereas one of the element is of type Integer.
+
+List<String> list1 = new ArrayList<String>(); // java 7 ? List<String> list1 = new ArrayList<>(); 
+list1.add("abc");
+//list1.add(new Integer(5)); //compiler error
+
+for(String str : list1){
+     //no type casting needed, avoids ClassCastException
+}
+
+Notice that at the time of list creation, we have specified that the type of elements in the list will be String. So if we try to add any other type of object in the list, the program will throw compile-time error. Also notice that in for loop, we don’t need typecasting of the element in the list, hence removing the ClassCastException at runtime.
+
+
+1. Added in java 1.5 
+2.Compile-time type checking
+3.Avoids ClassCastException 
+4.Can be class, Interface,Method
+
+
+
+
+Q2.How do you declare a generic class?
+Ans.We can define our own classes with generics type. A generic type is a class or interface that is parameterized over types. We use angle brackets (<>) to specify the type parameter.
+
+public class GenericsTypeOld {
+
+	private Object t;
+
+	public Object get() {
+		return t;
+	}
+
+	public void set(Object t) {
+		this.t = t;
+	}
+
+        public static void main(String args[]){
+		GenericsTypeOld type = new GenericsTypeOld();
+		type.set("Pankaj"); 
+		String str = (String) type.get(); //type casting, error prone and can cause ClassCastException
+	}
+}
+2.Generics Example
+public class GenericTest<T> {
+	private T t;
+
+	public T getT() {
+		return this.t;
+	}
+
+	public void setT(T t) {
+		this.t = t;
+	}
+
+	public static void main(String[] args) {
+
+		GenericTest<Integer> gt = new GenericTest<>();
+		gt.setT(45);
+		System.out.println(gt.getT());
+
+		GenericTest gt1 = new GenericTest<>();
+		gt1.setT("anuj");
+		System.out.println(gt1.getT());
+		gt1.setT(45);
+		System.out.println(gt1.getT());
+	}
+
+}
+Notice the use of GenericsType class in the main method. We don’t need to do type-casting and we can remove ClassCastException at runtime. If we don’t provide the type at the time of creation, the compiler will produce a warning that “GenericsType is a raw type.
+
+References to generic type GenericsType<T> should be parameterized”. When we don’t provide the type, the type becomes Object and hence it’s allowing both String and Integer objects. But, we should always try to avoid this because we will have to use type casting while working on raw type that can produce runtime errors.
+
+Ex.Comparable interface is a great example of Generics in interfaces and it’s written as:
+public interface Comparable<T> {
+    public int compareTo(T o);
+}
+
+Q3.What are the restrictions in using generic type that is declared in a class declaration?
+Ans.If a generic is declared as part of class declaration, it can be used any where a type can be used in a class - method (return type or argument), member variable etc. For Example: See how T is used as a parameter and return type in the class MyListGeneric
+
+Q4.How can we restrict Generics to a subclass of particular class?
+Ans.
+1.Type T is defined as part of class declaration. Any Java Type can be used a type for this class. If we would want to restrict the types allowed for a Generic Type, we can use a Generic Restrictions
+2. we specified a constraint "T extends Number". We can use the class MyListRestricted with any class extending (any sub class of) Number - Float, Integer, Double etc
+
+class MyListRestricted<T extends Number> {
+    private List<T> values;
+
+    void add(T value) {
+        values.add(value);
+    }
+
+    void remove(T value) {
+        values.remove(value);
+    }
+
+    T get(int index) {
+        return values.get(index);
+    }
+}
+
+MyListRestricted<Integer> restrictedListInteger = new MyListRestricted<Integer>();
+restrictedListInteger.add(1);
+restrictedListInteger.add(2);
+
+String not valid substitute for constraint "T extends Number".
+
+//MyListRestricted<String> restrictedStringList = 
+//new MyListRestricted<String>();//COMPILER ERROR
+
+Q5.Can you give an example of a Generic Method?
+Ans.A generic type can be declared as part of method declaration as well. Then the generic type can be used anywhere in the method (return type, parameter type, local or block variable type).
+
+static <X extends Number> X doSomething(X number){
+        X result = number;
+        //do something with result
+        return result;
+    }
 Q1.What are the important methods that are declared in the collection interface?
 Ans.Most important methods declared in the collection interface are the methods to add and remove an element.
 size() methods returns number of elements in the collection
