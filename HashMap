@@ -1,3 +1,138 @@
+
+Q8.What does autoboxing refer to?
+Ans.Types in Java are classified into two categories—primitive types and ref¬
+erence types. Leaving aside long/short variants, primitive types are integers, chars,
+floats, and booleans. All remaining types are reference types—this includes arrays,
+classes, and interfaces. Variable of these type hold addresses.
+2.Prior to Java 1.5, conversion between primitive typesand corresponding box types
+was performed by code like X = new Integer(x) ; and x = Integer. intValue(X) ;,
+where x is of type int and X is of type Integer. Java 1.5 introduced the concept of
+autoboxing and auto-unboxing—the compiler takes an assignment like Integer X =
+x;, where x is assumed to be of type int and internally translates it to Integer
+X = Integer .valueOf(x) ; The assignment int x = X; internally becomes x =
+Integer.intValue(X) ;.
+
+Q7.Compare and contrast String and StringBuilder.
+Ans.A key feature of Java string objects is that they are immutable.
+This has many benefits, e.g.,
+• threads can safely share strings without fear of data corruption through races,
+• strings can be cached, i.e., an operation can return a reference to an existing
+string, and
+• strings can be safely added to Sets and Maps without fear of changing content
+corrupting the hashtable.
+
+The drawback of string immutability is that every time a string has to be modified,
+a new object has to be created, even for something as simple as changing the first
+character. If the string is long, this is a time-consuming operation.
+
+public static String concat(List<String> strings){
+String result =
+for (String s : strings) {
+result += s;
+}
+return result ;
+}
+2.Every update to the result entails creating a new string and copying over the existing
+characters in the result to the start of the new string. If the string has length n this
+takes0(n) time. Since there are n iterations, the time complexity grows as0(n2).
+
+The StringBuilder class is mutable. Additionally, the constructor overallocates
+space, which means that adding characters to the end is efficient (until the buffer fills
+up). The following program is functionally equivalent to the one above, but has0{n)
+time complexity.
+
+public static String concat (List<String> strings) {
+StringBuilder result = new Str ingBuilder () ;
+for (String s : strings) {
+result . append(s) ;
+}
+return resul t . toStr ing () ;
+
+Q6.LIST, ARRAYLIST, AND LINKEDLIST
+Ans.
+All three are types that are used to represent sequences.
+1.List is an interface—a definition that specifies method signatures, but no im¬
+plementation of these methods. There are many benefitsof using interfaces over
+classes, such as polymorphism, decoupling implementation from specification,
+and to specify mixins.
+2. ArrayList is a class that implements the List interface. It is based on ar¬
+rays. It has a couple of methods outside of those in the List interface, such
+as trimToSizeO, but essentially it just implements List. Because it is imple¬
+mented using an array, testing and setting elements is fast (£?(1)), but adding
+elements to the beginning is slow (0(n) for an array of n elements). (Adding
+elements to the end is fast because arrays overallocate buffer space.)
+3.LinkedList isan implementation of the List interface. It is based on the linked
+list data structure. It has many methods in addition to the List interface,
+e.g., it implements stack and queue functionality. For a linked list LinkedList
+insertion at the head or tail takes0(1) time, but getting or setting the fcth element
+takes0(k) time.
+Q5.Explain the difference between final, finally, and finalizer?
+Ans.
+1.final is commonly used to ensure a variable is assigned to just once. (This
+assignment can take place where it is declared, or in the constructor.) It is also
+used when declaring a method (static or nonstatic) to indicate that the method
+cannot be overridden. Finally, if a class is declared to be final, it means that it
+cannot be subclassed. Violating any of these uses of final is a compile-time
+error.
+2. finally is used with a try-catch block to specify code that must be executed,
+regardless of whether an exception was thrown and/or caught. It is commonly
+used to prevent resource leaks when an exception is thrown, e.g., files not being
+closed, locks not being released, etc.
+3. finalizer is nonstatic method that every class inherits from Ob ject. It is called
+when the object is garbage collected. Ostensibly, it can be used to avoid leaks
+by explicitly closing files, nulling out object references, etc. In practice, since the
+exact time when an object is garbage collected is not under programmer control,
+these resources should be explicitly deallocated—an overridden finalizer()
+is a code smell. (Other drawbacks of finalizerO include low performance as
+well as unexpected behaviors on uncaught exceptions.)
+
+Q4.Write 5 standard exceptions?
+Ans.
+1.ArithmeticException
+It is thrown when an exceptional condition has occurred in an arithmetic operation.
+2.ArrayIndexOutOfBoundsException
+It is thrown to indicate that an array has been accessed with an illegal index. The index is either negative or greater than or equal to the size of the array.
+3.ClassNotFoundException
+This Exception is raised when we try to access a class whose definition is not found
+4.FileNotFoundException
+This Exception is raised when a file is not accessible or does not open.
+5.IOException.
+6.NullPointerException
+This exception is raised when referring to the members of a null object. Null represents nothing
+Q3.THROW VS. THROWS
+Ans. 1.Both are keywords related to exception handling.
+1.The throw keyword is used to throw an exception from a method or static block, e.g., if (A. length == 8) throw IllegalArgumentException("Array must not be empty");
+2.throw keyword is used inside a function. It is used when it is required to throw an Exception logically.
+3.The throws keyword is used in method declaration to indicate exceptions that
+can be possibly be thrown by the method, e.g., public void binSearchfint []
+A, int k) throws IllegalArgumentException. A method that throws
+checked exceptions (e.g., FileNotFoundException) must declare all of them.
+Unchecked exceptions, e.g., IllegalArgumentException, that are thrown by
+the method may be declared optionally.
+4.throws keyword is in the function signature. It is used when the function has some statements that can lead to some exceptions.
+5.throw keyword is used to throw an exception explicitly. It can throw only one exception at a time
+6.throws keyword can be used to declare multiple exceptions, separated by comma. Whichever exception occurs, if matched with the declared ones, is thrown automatically then
+
+Q2.Describe a way in which a program written in Java can leak memory?
+Ans.
+Memory Leak: A memory leak, in computer science (or leakage, in this context), occurs when a computer program consumes memory but is unable to release it back to the operating system.
+2.keep growing a queue, no finally close db etc, not odd classloader/thread.
+3.Threads started by your application, ThreadLocal variables, logging appenders are some of the usual suspects to cause classloader leaks
+
+Java does automatic Garbage collection. However there can be situations where garbage collector does not collect objects because there are references to them. There might be situations where where an application creates lots of objects and does not use them. Just because every objects has valid references, garbage collector in Java can’t destroys the objects. Such types of useless objects are called as Memory leaks. If allocated memory goes beyond limit, program will be terminated by rising OutOfMemoryError.
+
+Tools for memory management :
+HP OVO
+HP J METER
+JProbe
+IBM Tivoli
+
+Exa: 	Vector v1 = new Vector(214444444);
+		Vector v2 = new Vector(214744444);
+		Vector v3 = new Vector(214444444);
+		System.out.println("Memory Leaks..");
+"main" java.lang.OutOfMemoryError: Java heap space
+
 Q1.What are Generics?
 Ans.Generics was added in Java 5 to provide compile-time type checking and removing risk of ClassCastException that was common while working with collection classes.
 1.Generics are used to create Generic Classes and Generic methods which can work with different Types(Classes).
