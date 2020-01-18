@@ -1,3 +1,8 @@
+1.1. How to Convert Array into List using java8?
+
+List<Integer> list=Arrays.Stream(arr).boxed().collect(Collectors.toList());
+
+
 1.a stream is a
 sequence of data items that are conceptually produced one at a time—a program might read
 items from an input stream one by one and similarly write items to an output stream. The
