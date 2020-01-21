@@ -1,3 +1,27 @@
+Q9.What happens if make stringBuilder type key in hashMap?
+Ans.Equals and hashCode method contract will break and hashmap will have multiple key with same content and similar key.Because StringBuilder
+does not override Equals and hashCode Method of Object class.
+1.So, it strongly recommeded to we should alwas use Class which override Equals and HashCode method.
+
+	Map<StringBuilder, String> map = new HashMap<>();
+		map.put(new StringBuilder("anuj"), "1");
+		map.put(new StringBuilder("anuj"), "2");
+		map.put(new StringBuilder("anuj"), "3");
+		map.put(new StringBuilder("anuj"), "4");
+		System.out.println(map);
+Output: {anuj=2, anuj=4, anuj=1, anuj=3}
+
+2.WitH sTRING 
+
+	Map<String, String> map = new HashMap<>();
+		map.put(new String("anuj"), "1");
+		map.put(new String("anuj"), "2");
+		map.put(new String("anuj"), "3");
+		map.put(new String("anuj"), "4");
+		System.out.println(map);
+		
+ouTPUT: {anuj=4}
+
 
 Q8.What does autoboxing refer to?
 Ans.Types in Java are classified into two categories—primitive types and ref¬
