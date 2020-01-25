@@ -1,3 +1,48 @@
+
+Q11.Can We Declare a Class Private in Java?
+Ans.Outer or concrete class can’t be private in java.
+
+For example:
+
+private class PrivateExample{
+	public static void main(String args[]){
+		System.out.println("this is a private class example");
+	}
+}
+Output: Compile Time Error
+It is because, java follows oops concepts. If you make any class as private, it will not be accessible from another class. So there can’t be inheritance, runtime polymorphism, abstraction etc.
+
+But, nested class can be private. For instance:
+
+class A{
+	private class B{
+		void msg(){
+			System.out.println("hello");
+		}
+	}
+	public static void main(String args[])
+	{
+		A.B b=new A().new B();
+		b.msg();
+	}
+}
+Output: hello
+
+
+Q10.Why can’t constructors be final, static or abstract in Java?
+Ans.When you set a method as final, it means : “You don’t want any class override it”, but constructor by JLS definition can’t overridden,so it is clean.
+
+When you set a method as ‘abstract’,it means:”Method don’t have any body and you want to implement it at another time in a child class”, but the constructor is called implicitly when the new keyword is used so it can’t lack a body.
+
+When you set a method as ‘static’, it means: “Method belong to class, not a particular object” but constructor implicitly called to initialize an object, so there is no purpose in having a static constructor.
+
+public class FinalConstructor {
+ 
+//Illegal modifier for the constructor in type FinalConstructor;
+//only public, protected & private are permitted
+private final FinalConstructor () { }
+ 
+}
 Q9.What happens if make stringBuilder type key in hashMap?
 Ans.Equals and hashCode method contract will break and hashmap will have multiple key with same content and similar key.Because StringBuilder
 does not override Equals and hashCode Method of Object class.
