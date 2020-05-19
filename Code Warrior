@@ -1,0 +1,283 @@
+                                                             Code Warrior
+1.	SQL Injection  
+Ans: SQL Injection flaws are introduced when software developers create dynamic database queries that include user supplied input.
+To avoid SQL Injection.
+1.	Stop writing dynamic queries
+2.	Prevent user supplied input which contains malicious  SQL that affecting  the logic of executing queries.
+3.	Below are the technique which can used to prevent SQL injection of any database
+There are other types of databases, like XML databases, which can have similar problems (e.g., XPath and XQuery injection) and these techniques can be used to protect them as well
+
+Primary Defenses:
+•	Option 1: Use of Prepared Statements (with Parameterized Queries)
+•	Option 2: Use of Stored Procedures
+•	Option 3: Whitelist Input Validation
+•	Option 4: Escaping All User Supplied Input
+Additional Defenses:
+•	Also: Enforcing Least Privilege
+•	Also: Performing Whitelist Input Validation as a Secondary Defense
+
+Exa: SQL injection flaws typically look like this:
+The following (Java) example is UNSAFE, and would allow an attacker to inject code into the query that would be executed by the database. The unvalidated "customerName" parameter that is simply appended to the query allows an attacker to inject any SQL code they want. Unfortunately, this method for accessing databases is all too common
+String query = "SELECT account_balance FROM user_data WHERE user_name = " 
+             + request.getParameter("customerName");
+try {
+    Statement statement = connection.createStatement( ... );
+    ResultSet results = statement.executeQuery( query );
+}
+
+
+Primary Defenses
+Defense Option 1: Prepared Statements (with Parameterized Queries)
+1.	Parameterized queries force the developer to first define all the SQL code, and then pass in each parameter to the query later.
+2.	This coding style allows the database to distinguish between code and data, regardless of what user input is supplied.
+3.	Prepared statements ensure that an attacker is not able to change the intent of a query
+4.	if an attacker were to enter the userID of tom' or '1'='1, the parameterized query would not be vulnerable and would instead look for a username which literally matched the entire string tom' or '1'='1
+5.	Java EE – use PreparedStatement() with bind variables
+
+1.	PreparedStatement stmt=con.prepareStatement("insert into Emp values(?,?)");  
+2.	stmt.setInt(1,101);//1 specifies the first parameter in the query  
+3.	stmt.setString(2,"Ratan"); 
+4.	PreparedStatement stmt=con.prepareStatement("update emp set name=? where id=?");  
+5.	stmt.setString(1,"Sonoo");//1 specifies the first parameter in the query i.e. name  
+6.	stmt.setInt(2,101);  
+
+Safe Java Prepared Statement Example
+The following code example uses a PreparedStatement, Java's implementation of a parameterized query, to execute the same database query.
+// This should REALLY be validated too
+String custname = request.getParameter("customerName"); 
+// Perform input validation to detect attacks
+String query = "SELECT account_balance FROM user_data WHERE user_name = ? ";
+PreparedStatement pstmt = connection.prepareStatement( query );
+pstmt.setString( 1, custname); 
+ResultSet results = pstmt.executeQuery( );
+
+
+Hibernate Query Language (HQL) have the same type of injection problems (which we call HQL Injection). HQL supports parameterized queries as well, so we can avoid this problem:
+//First is an unsafe HQL Statement
+
+Hibernate Query Language (HQL) Prepared Statement (Named Parameters) Examples
+Query unsafeHQLQuery 
+= session.createQuery("from Inventory where productID='"+userSuppliedParameter+"'");
+//Here is a safe version of the same query using named parameters
+Query safeHQLQuery = session.createQuery("from Inventory where productID=:productid");
+safeHQLQuery.setParameter("productid", userSuppliedParameter);
+
+
+Defense Option 2: Stored Procedures
+1.	Stored procedures are not always safe from SQL injection.
+2.	The difference between prepared statements and stored procedures is that the SQL code for a stored procedure is defined and stored in the database itself.
+3.	and then called from the application. Both of these techniques have the same effectiveness in preventing SQL injection so your organization should choose which approach makes the most sense for you
+Note: 'Implemented safely' means the stored procedure does not include any unsafe dynamic SQL generation. Developers do not usually generate dynamic SQL inside stored procedures. However, it can be done, but should be avoided.
+If it can't be avoided, the stored procedure must use input validation.
+
+Safe Java Stored Procedure Example
+The following code example uses a CallableStatement, Java's implementation of the stored procedure interface, to execute the same database query
+// This should REALLY be validated
+String custname = request.getParameter("customerName"); 
+try {
+  CallableStatement cs = connection.prepareCall("{call sp_getAccountBalance(?)}");
+  cs.setString(1, custname);
+  ResultSet results = cs.executeQuery();      
+  // … result set handling 
+} catch (SQLException se) {           
+  // … logging and error handling
+}
+
+
+Defense Option 3: Whitelist Input Validation
+Various parts of SQL queries aren't legal locations for the use of bind variables, such as the names of tables or columns, and the sort order indicator (ASC or DESC). In such situations, input validation or query redesign is the most appropriate defense. For the names of tables or columns, ideally those values come from the code, and not from user parameters.
+But if user parameter values are used for targeting different table names and column names, then the parameter values should be mapped to the legal/expected table or column names to make sure unvalidated user input doesn't end up in the query.
+
+String tableName;
+switch(PARAM):
+  case "Value1": tableName = "fooTable";
+                 break;
+  case "Value2": tableName = "barTable";
+                 break;
+  ...
+  default      : throw new InputValidationException("unexpected value provided" 
+                                                  + " for table name");
+
+4.	For something simple like a sort order, it would be best if the user supplied input is converted to a boolean, and then that boolean is used to select the safe value to append to the query. This is a very standard need in dynamic query creation.
+5.	public String someMethod(boolean sortOrder) {
+6.	 String SQLquery = "some SQL ... order by Salary " + (sortOrder ? "ASC" : "DESC");
+
+
+Defense Option 4: Escaping All User-Supplied Input
+Database specific
+
+
+Additional Defenses
+
+Least Privilege
+1.To minimize the potential damage of a successful SQL injection attack, you should minimize the privileges assigned to every database account in your environment. Do not assign DBA or admin type access rights to your application accounts.
+2. If an account only needs access to portions of a table, consider creating a view that limits access to that portion of the data and assigning the account access to the view instead, rather than the underlying table. Rarely, if ever, grant create or delete access to database accounts.
+
+
+Whitelist Input Validation
+input validation can also be a secondary defense used to detect unauthorized input before it is passed to the SQL query
+
+
+1.	Now the app used parameterized queries. Parametrized queries force first to write the complete SQL code, and then pass each parameter as per requirement. It helps in distinguishing between code and data regardless of what the user has supplied and prevent SQL injection.
+2.	The application uses safe eq() operator. This operator ensures that the user inputs are bound securely to variables in the generated queries. It is recommended to avoid the where operator and use the safer alternatives provided by the application programming interface.
+3.	The application does not validate the path and the filename format. So the attacker can for a malicious construct to view confidential user files.
+4.	The application is not relying on any input to decide for a filename and storage location in the filesystem. The file ID parameter value checked for its presence in the database and to determine if the user has permission to view the file.
+
+		                   Injection Flaws-OS Command Injection
+1.	Command injection (or OS Command Injection) is a type of injection where the software, that constructs a system command using externally influenced input, does not correctly neutralizes the input from special elements that can modify the initially intended command.
+2.	For example, if the supplied value is:
+3.	calc
+4.	when typed in a Windows command prompt, the application Calculator is displayed.
+5.	However, if the supplied value has been tempered with, and now it is:
+6.	calc & echo "test"
+7.	When execute, it changes the meaning of the initial intended value.
+8.	Now, both the Calculator application and the value test are displayed
+ 
+
+ 
+
+
+Primary Defenses
+Defense Option 1: Avoid calling OS commands directly
+The primary defense is to avoid calling OS commands directly. Built-in library functions are a very good alternative to OS Commands, and they cannot be manipulated to perform tasks other than those it is intended to do.
+For example use mkdir() instead of system("mkdir /dir_name").
+If there are available libraries or APIs for the language you used, this is the preferred method.
+
+Defense option 2: Escape values added to OS commands specific to each OS
+
+Defense option 3: Parameterization in conjunction with Input Validation
+
+Layer 1
+Parameterization: If available, use structured mechanisms that automatically enforce the separation between data and command. These mechanisms can help to provide the relevant quoting, encoding
+
+Layer 2
+Input validation: The values for commands and the relevant arguments should be both validated. There are different degrees of validation for the actual command and its arguments:
+•	When it comes to the commands used, these must be validated against a whitelist of allowed commands.
+•	In regards to the arguments used for these commands, they should be validated using the following options:
+o	Positive or whitelist input validation: Where are the arguments allowed explicitly defined.
+o	White list Regular Expression: Where is explicitly defined a whitelist of good characters allowed and the maximum length of the string. Ensure that metacharacters like ones specified in Note A and white-spaces are not part of the Regular Expression. For example, the following regular expression only allows lowercase letters and numbers, and does not contain metacharacters. The length is also being limited to 3-10 characters: ^[a-z0-9]{3,10}$
+•	Note A:
+•	& |  ; $ > < ` \ !
+
+Additional Defenses
+On top of primary defences, parameterizations and input validation, we also recommend adopting all of these additional defenses in order to provide defense in depth.
+These additional defenses are:
+•	Applications should run using the lowest privileges that are required to accomplish the necessary tasks.
+•	If possible, create isolated accounts with limited privileges that are only used for a single task.
+
+Code examples
+In Java, use ProcessBuilder and the command must be separated from its arguments.
+In Java, use ProcessBuilder and the command must be separated from its arguments.
+Note about the Java's Runtime.exec method behavior:
+There are many sites that will tell you that Java's Runtime.exec is exactly the same as C's system function. This is not true. Both allow you to invoke a new program/process.
+However, C's system function passes its arguments to the shell (/bin/sh) to be parsed, whereas Runtime.exec tries to split the string into an array of words, then executes the first word in the array with the rest of the words as parameters.
+Runtime.exec does NOT try to invoke the shell at any point and do not support shell metacharacters
+
+The key difference is that much of the functionality provided by the shell that could be used for mischief (chaining commands using &, &&, |, ||, etc, redirecting input and output) would simply end up as a parameter being passed to the first command, and likely causing a syntax error, or being thrown out as an invalid parameter.
+
+
+Incorrect usage:
+ProcessBuilder b = new ProcessBuilder("C:\DoStuff.exe -arg1 -arg2");
+In this example, the command together with the arguments are passed as a one string, making easy to manipulate that expression and inject malicious strings.
+
+Correct Usage:
+Here is an example that starts a process with a modified working directory. The command and each of the arguments are passed separately. This make it easy to validated each term and reduces the risk to insert malicious strings.
+ProcessBuilder pb = new ProcessBuilder("TrustedCmd", "TrustedArg1", "TrustedArg2");
+
+Map<String, String> env = pb.environment();
+
+pb.directory(new File("TrustedDir"));
+
+Process p = pb.start();
+
+
+
+Code Warrior
+
+1.	A dangerous OS invocation construct is used to perform the file removal from the file system. An attacker could tamper with the input parameters to modify the general structure of the command and execute arbitrary instructions in servers.
+2.	The app uses the Java API to perform file operations against the server's filesystem. This way, this ensuring no commands outside of instructions can be executed by sending a malicious request to servers.
+3.	The application mixes Hibernate Query Language (HQL) - queries and user data. It increases the likelihood of SQL-injection..
+4.	The prepared parameter is added to the query. The email variable is properly handled and SQL-injection prevented. Using prepared statements is one of the methods to write dynamic queries but a faster, safer, and easier way. Parametrized Queries force to first write the complete SQL code, and then pass each parameter as per requirement. It helps in distinguishing between code and data regardless of what user input has supplied to SQL code.
+5.	String formatting to generate the query does not ensure that string values will be safe, because this does nothing except inserting the value in the string. So this is just the same as using the inputs directly in the SQL queries, and it increases the likelihood of SQL-injection
+6.	Now a prepared parameter is added to query. In this way, the statement is escaped correctly and ensures that the information is used only as data. It helps prevent SQL injection.
+7.	A dangerous OS invocation construct is used to perform the file removal from the file system. An attacker could tamper with the input parameters to modify the general structure of the command and execute arbitrary instructions in servers.
+
+
+Authentication General Guidelines
+User IDs
+Make sure your usernames/user IDs are case-insensitive. User 'smith' and user 'Smith' should be the same user. Usernames should also be unique. For high-security applications, usernames could be assigned and secret instead of user-defined public data.
+
+Authentication and Error Messages
+
+The application does not provide an attacker with any information used to run an email enumeration. It recommended that carefully consider error messages and response times from the server.
+Using any of the authentication mechanisms (login, password reset or password recovery), an application must respond with a generic error message regardless of whether:
+•	The user ID or password was incorrect.
+•	The account does not exist.
+•	The account is locked or disabled.
+The account registration feature should also be taken into consideration, and the same approach of generic error message can be applied regarding the case in which the user exists.
+The objective is to prevent the creation of a discrepancy factor, allowing an attacker to mount a user enumeration action against the application.
+It is interesting to note that the business logic itself can bring a discrepancy factor related to the processing time taken. Indeed, depending on the implementation, the processing time can be significantly different according to the case (success vs failure) allowing an attacker to mount a time-based attack (delta of some seconds for example).
+Example using pseudo-code for a login feature:
+•	First implementation using the "quick exit" approach
+•	IF USER_EXISTS(username) THEN
+•	    password_hash=HASH(password)
+•	    IS_VALID=LOOKUP_CREDENTIALS_IN_STORE(username, password_hash)
+•	    IF NOT IS_VALID THEN
+•	        RETURN Error("Invalid Username or Password!")
+•	    ENDIF
+•	ELSE
+•	   RETURN Error("Invalid Username or Password!")
+•	ENDIF
+It can be clearly seen that if the user doesn't exist, the application will directly throw an error. Otherwise, when the user exists and the password doesn't, it is apparent that there will be more processing before the application errors out. In return, the response time will be different for the same error, allowing the attacker to differentiate between a wrong username and a wrong password.
+password_hash=HASH(password)
+IS_VALID=LOOKUP_CREDENTIALS_IN_STORE(username, password_hash)
+IF NOT IS_VALID THEN
+   RETURN Error("Invalid Username or Password!")
+ENDIF
+This code will go through the same process no matter what the user or the password is, allowing the application to return in approximately the same response time.
+
+Regarding the user enumeration itself, protection against brute-force attack are also effective because they prevent an attacker from applying the enumeration at scale. Usage of CAPTCHA can be applied on a feature for which a generic error message cannot be returned because the user experience must be preserved.
+
+
+Incorrect and correct response examples
+Login
+Incorrect response examples:
+•	"Login for User foo: invalid password."
+•	"Login failed, invalid user ID."
+•	"Login failed; account disabled."
+•	"Login failed; this user is not active."
+Correct response example:
+•	"Login failed; Invalid user ID or password."
+Password recovery
+Incorrect response examples:
+•	"We just sent you a password reset link."
+•	"This email address doesn't exist in our database."
+Correct response example:
+•	"If that email address is in our database, we will send you an email to reset your password."
+
+Account creation
+Incorrect response examples:
+•	"This user ID is already in use."
+•	"Welcome! You have signed up successfully."
+Correct response example:
+•	"A link to activate your account has been emailed to the address provided."
+1.	An adversary can determine which accounts are registered when providing the user with specific feedback about the authentication process.
+•	It's recommended to provide vague feedback to the user about the authentication process. It's important to keep the response time consistent in all cases, this way an adversary won't be able to use a timing attack to determine existing accounts.
+•	The application is setting a remember-me token before confirming if the user's credentials are valid. In addition to this, the token provided has no expiry date.
+•	The application is limiting the time the token considered valid and will only create a token if the credentials have been correctly validated first. However, the token is never invalidated nor removed when the user logs out. That means if an attacker can hijack a user's token, it can be used to access the system even after the user has logged out
+
+
+Cryptographic_Storage:Storage Management
+
+Sensitive Information stored in plaintext. Thus, if an attacker gains access to the database, then it can easily read user data.
+
+An Advanced Encryption Standard (AES) algorithm in Galois/Counter Mode (GCM) is used to perform the encryption of sensitive data. GCM mode has the benefit of providing authenticity (integrity) in addition to confidentiality. Encoding sensitive user data before storing will successfully hide the data from any attacker that can not access the encryption keys.
+
+Username Enumeration
+{
+throw new UserAuthenticationException("Username is not registered.");
+			}
+			
+			if (!isValidPassword) {
+				throw new UserAuthenticationException("Wrong password for Username "+username);
+			}
